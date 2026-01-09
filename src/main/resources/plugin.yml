@@ -76,6 +76,9 @@ commands:
     description: Reload NexusBan configuration
     usage: /nbreload
     permission: nexusban.reload
+  nbhelp:
+    description: Show all NexusBan commands
+    usage: /nbhelp
 
 permissions:
   nexusban.*:

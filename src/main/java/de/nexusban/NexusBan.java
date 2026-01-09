@@ -105,6 +105,7 @@ public class NexusBan extends JavaPlugin {
         
         // Admin commands
         getCommand("nbreload").setExecutor(new ReloadCommand(this));
+        getCommand("nbhelp").setExecutor(new HelpCommand());
     }
 
     private void registerListeners() {
