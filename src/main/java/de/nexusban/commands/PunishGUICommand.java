@@ -64,9 +64,40 @@ public class PunishGUICommand implements CommandExecutor {
             return true;
         }
         
-        // Player never joined - inform user and don't make API call
-        player.sendMessage(MessageUtils.PREFIX + "§cPlayer §e" + targetName + "§c has never joined this server!");
-        player.sendMessage(MessageUtils.PREFIX + "§7You can only punish players who have joined before.");
+        // Player never joined - fetch UUID async from Mojang API
+        player.sendMessage(MessageUtils.PREFIX + "§7Loading player data for §e" + targetName + "§7...");
+        
+        // Run async to not block server
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                // This calls Mojang API (can take time, but we're async now)
+                @SuppressWarnings("deprecation")
+                OfflinePlayer mojangPlayer = Bukkit.getOfflinePlayer(targetName);
+                UUID uuid = mojangPlayer.getUniqueId();
+                
+                // Check if UUID is valid (not offline-mode generated)
+                if (uuid != null) {
+                    // Switch back to main thread to open GUI
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            PunishGUI.openMainMenu(player, targetName, uuid);
+                        }
+                    });
+                } else {
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (player.isOnline()) {
+                            player.sendMessage(MessageUtils.PREFIX + "§cPlayer §e" + targetName + " §cnot found!");
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    if (player.isOnline()) {
+                        player.sendMessage(MessageUtils.PREFIX + "§cError loading player: §e" + e.getMessage());
+                    }
+                });
+            }
+        });
         
         return true;
     }
