@@ -24,7 +24,7 @@ public class PunishGUI {
     public static final String KICK_REASON_TITLE = "§8« §c§lKICK REASON §8» §7";
     public static final String WARN_REASON_TITLE = "§8« §e§lWARN REASON §8» §7";
     
-    public static void openMainMenu(Player staff, String targetName) {
+    public static void openMainMenu(Player staff, String targetName, UUID targetUUID) {
         Inventory inv = Bukkit.createInventory(null, 54, MAIN_MENU_TITLE + targetName);
         
         // Fill borders with black glass
@@ -59,26 +59,23 @@ public class PunishGUI {
         // Player head in center top
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(targetName));
+        skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(targetUUID));
         skullMeta.setDisplayName("§c§l⚔ §f§l" + targetName + " §c§l⚔");
         
-        // Get player info
-        UUID targetUUID = NexusBan.getInstance().getPunishmentManager().getUUID(targetName);
+        // Get player info - UUID is already provided, no need to fetch
         int warnings = 0;
         String banStatus = "§a✔ Not Banned";
         String muteStatus = "§a✔ Not Muted";
         String onlineStatus = Bukkit.getPlayer(targetName) != null ? "§a● Online" : "§c○ Offline";
         
-        if (targetUUID != null) {
-            warnings = NexusBan.getInstance().getHistoryManager().getWarningCount(targetUUID);
-            if (NexusBan.getInstance().getPunishmentManager().isBanned(targetUUID)) {
-                Punishment ban = NexusBan.getInstance().getPunishmentManager().getBan(targetUUID);
-                banStatus = ban.isPermanent() ? "§4✘ Permanent Ban" : "§c✘ Temp Banned";
-            }
-            if (NexusBan.getInstance().getPunishmentManager().isMuted(targetUUID)) {
-                Punishment mute = NexusBan.getInstance().getPunishmentManager().getMute(targetUUID);
-                muteStatus = mute.isPermanent() ? "§6✘ Permanent Mute" : "§e✘ Temp Muted";
-            }
+        warnings = NexusBan.getInstance().getHistoryManager().getWarningCount(targetUUID);
+        if (NexusBan.getInstance().getPunishmentManager().isBanned(targetUUID)) {
+            Punishment ban = NexusBan.getInstance().getPunishmentManager().getBan(targetUUID);
+            banStatus = ban.isPermanent() ? "§4✘ Permanent Ban" : "§c✘ Temp Banned";
+        }
+        if (NexusBan.getInstance().getPunishmentManager().isMuted(targetUUID)) {
+            Punishment mute = NexusBan.getInstance().getPunishmentManager().getMute(targetUUID);
+            muteStatus = mute.isPermanent() ? "§6✘ Permanent Mute" : "§e✘ Temp Muted";
         }
         
         skullMeta.setLore(Arrays.asList(

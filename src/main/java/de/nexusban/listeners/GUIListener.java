@@ -6,6 +6,7 @@ import de.nexusban.gui.PunishGUI;
 import de.nexusban.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,11 +21,25 @@ public class GUIListener implements Listener {
     
     private final NexusBan plugin;
     
-    // Store pending punishments (staff UUID -> [target, type, duration])
+    // Store pending punishments (staff UUID -> [target, type, duration, targetUUID])
     private final Map<UUID, String[]> pendingPunishments = new HashMap<>();
     
     public GUIListener(NexusBan plugin) {
         this.plugin = plugin;
+    }
+    
+    /**
+     * Helper method to get UUID from player name (cached, no API calls)
+     */
+    private UUID getTargetUUID(String targetName) {
+        Player online = Bukkit.getPlayerExact(targetName);
+        if (online != null) return online.getUniqueId();
+        
+        @SuppressWarnings("deprecation")
+        OfflinePlayer offline = Bukkit.getOfflinePlayer(targetName);
+        if (offline.hasPlayedBefore()) return offline.getUniqueId();
+        
+        return null;
     }
     
     @EventHandler
@@ -69,28 +84,32 @@ public class GUIListener implements Listener {
     
     private void handleMainMenu(Player player, ItemStack clicked, String targetName) {
         Material type = clicked.getType();
+        UUID targetUUID = getTargetUUID(targetName);
+        String uuidStr = targetUUID != null ? targetUUID.toString() : "";
         
         switch (type) {
             case BARRIER: // Ban
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "ban", "permanent"});
+                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "ban", "permanent", uuidStr});
                 PunishGUI.openReasonMenu(player, targetName, "ban");
                 break;
             case CLOCK: // Temp Ban
+                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempban", null, uuidStr});
                 PunishGUI.openBanDurationMenu(player, targetName);
                 break;
             case IRON_BOOTS: // Kick
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "kick", null});
+                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "kick", null, uuidStr});
                 PunishGUI.openReasonMenu(player, targetName, "kick");
                 break;
             case PAPER: // Mute
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "mute", "permanent"});
+                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "mute", "permanent", uuidStr});
                 PunishGUI.openReasonMenu(player, targetName, "mute");
                 break;
             case BOOK: // Temp Mute
+                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempmute", null, uuidStr});
                 PunishGUI.openMuteDurationMenu(player, targetName);
                 break;
             case SUNFLOWER: // Warn
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "warn", null});
+                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "warn", null, uuidStr});
                 PunishGUI.openReasonMenu(player, targetName, "warn");
                 break;
             case WRITABLE_BOOK: // History
@@ -105,26 +124,46 @@ public class GUIListener implements Listener {
     
     private void handleBanDuration(Player player, ItemStack clicked, String targetName) {
         if (clicked.getType() == Material.ARROW) {
-            PunishGUI.openMainMenu(player, targetName);
+            String[] pending = pendingPunishments.get(player.getUniqueId());
+            UUID targetUUID = (pending != null && pending.length > 3 && !pending[3].isEmpty()) 
+                ? UUID.fromString(pending[3]) : getTargetUUID(targetName);
+            if (targetUUID != null) {
+                PunishGUI.openMainMenu(player, targetName, targetUUID);
+            } else {
+                player.closeInventory();
+                player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
+            }
             return;
         }
         
         String duration = getDurationFromMaterial(clicked.getType(), "ban");
         if (duration != null) {
-            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempban", duration});
+            String[] pending = pendingPunishments.get(player.getUniqueId());
+            String uuidStr = (pending != null && pending.length > 3) ? pending[3] : "";
+            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempban", duration, uuidStr});
             PunishGUI.openReasonMenu(player, targetName, "ban");
         }
     }
     
     private void handleMuteDuration(Player player, ItemStack clicked, String targetName) {
         if (clicked.getType() == Material.ARROW) {
-            PunishGUI.openMainMenu(player, targetName);
+            String[] pending = pendingPunishments.get(player.getUniqueId());
+            UUID targetUUID = (pending != null && pending.length > 3 && !pending[3].isEmpty()) 
+                ? UUID.fromString(pending[3]) : getTargetUUID(targetName);
+            if (targetUUID != null) {
+                PunishGUI.openMainMenu(player, targetName, targetUUID);
+            } else {
+                player.closeInventory();
+                player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
+            }
             return;
         }
         
         String duration = getDurationFromMaterial(clicked.getType(), "mute");
         if (duration != null) {
-            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempmute", duration});
+            String[] pending = pendingPunishments.get(player.getUniqueId());
+            String uuidStr = (pending != null && pending.length > 3) ? pending[3] : "";
+            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempmute", duration, uuidStr});
             PunishGUI.openReasonMenu(player, targetName, "mute");
         }
     }
@@ -132,22 +171,33 @@ public class GUIListener implements Listener {
     private void handleReasonMenu(Player player, ItemStack clicked, String targetName, String title) {
         if (clicked.getType() == Material.ARROW) {
             // Go back
+            String[] pending = pendingPunishments.get(player.getUniqueId());
+            UUID targetUUID = (pending != null && pending.length > 3 && !pending[3].isEmpty()) 
+                ? UUID.fromString(pending[3]) : getTargetUUID(targetName);
+            
             if (title.startsWith(PunishGUI.BAN_REASON_TITLE)) {
-                String[] pending = pendingPunishments.get(player.getUniqueId());
                 if (pending != null && pending[1].equals("tempban")) {
                     PunishGUI.openBanDurationMenu(player, targetName);
+                } else if (targetUUID != null) {
+                    PunishGUI.openMainMenu(player, targetName, targetUUID);
                 } else {
-                    PunishGUI.openMainMenu(player, targetName);
+                    player.closeInventory();
+                    player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
                 }
             } else if (title.startsWith(PunishGUI.MUTE_REASON_TITLE)) {
-                String[] pending = pendingPunishments.get(player.getUniqueId());
                 if (pending != null && pending[1].equals("tempmute")) {
                     PunishGUI.openMuteDurationMenu(player, targetName);
+                } else if (targetUUID != null) {
+                    PunishGUI.openMainMenu(player, targetName, targetUUID);
                 } else {
-                    PunishGUI.openMainMenu(player, targetName);
+                    player.closeInventory();
+                    player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
                 }
+            } else if (targetUUID != null) {
+                PunishGUI.openMainMenu(player, targetName, targetUUID);
             } else {
-                PunishGUI.openMainMenu(player, targetName);
+                player.closeInventory();
+                player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
             }
             return;
         }

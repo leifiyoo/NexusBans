@@ -4,10 +4,13 @@ import de.nexusban.NexusBan;
 import de.nexusban.gui.PunishGUI;
 import de.nexusban.utils.MessageUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class PunishGUICommand implements CommandExecutor {
     
@@ -44,8 +47,26 @@ public class PunishGUICommand implements CommandExecutor {
             return true;
         }
         
-        // Allow punishing ANY player name (online, offline, or never joined)
-        PunishGUI.openMainMenu(player, targetName);
+        // Check if player is online first (fast)
+        Player onlineTarget = Bukkit.getPlayerExact(targetName);
+        if (onlineTarget != null) {
+            // Player is online, open GUI immediately
+            PunishGUI.openMainMenu(player, targetName, onlineTarget.getUniqueId());
+            return true;
+        }
+        
+        // Check if player has played before (from cache, also fast)
+        @SuppressWarnings("deprecation")
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(targetName);
+        if (offlinePlayer.hasPlayedBefore()) {
+            // Player has played before, use cached UUID
+            PunishGUI.openMainMenu(player, targetName, offlinePlayer.getUniqueId());
+            return true;
+        }
+        
+        // Player never joined - inform user and don't make API call
+        player.sendMessage(MessageUtils.PREFIX + "§cPlayer §e" + targetName + "§c has never joined this server!");
+        player.sendMessage(MessageUtils.PREFIX + "§7You can only punish players who have joined before.");
         
         return true;
     }
