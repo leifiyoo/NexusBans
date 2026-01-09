@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Minecraft-1.21.4-green?style=for-the-badge&logo=minecraft" alt="Minecraft">
-  <img src="https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk" alt="Java">
+  <img src="https://img.shields.io/badge/Minecraft-1.13--1.21+-green?style=for-the-badge&logo=minecraft" alt="Minecraft">
+  <img src="https://img.shields.io/badge/Java-8+-orange?style=for-the-badge&logo=openjdk" alt="Java">
   <img src="https://img.shields.io/badge/Spigot-API-yellow?style=for-the-badge" alt="Spigot">
   <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License">
 </p>
@@ -91,6 +91,7 @@
 | `/ipbanlist` | List all IP bans |
 | `/alts <player>` | Check for alt accounts |
 | `/checkban <id>` | Look up ban details |
+| `/nexusbanreload` | Reload configuration |
 
 ### ⏱️ Time Format
 
@@ -129,6 +130,7 @@ Combined: 1d12h30m = 1 day, 12 hours, 30 minutes
 | `nexusban.checkban` | Use /checkban | OP |
 | `nexusban.alts` | Use /alts | OP |
 | `nexusban.alts.showip` | See IPs in /alts | OP |
+| `nexusban.reload` | Use /nexusbanreload | OP |
 | `nexusban.notify` | Receive staff alerts | OP |
 | `nexusban.exempt` | Cannot be punished | false |
 | `nexusban.admin` | Admin-level staff | false |

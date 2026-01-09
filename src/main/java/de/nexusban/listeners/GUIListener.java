@@ -118,13 +118,27 @@ public class GUIListener implements Listener {
     private void handleBanDuration(Player player, ItemStack clicked, String targetName) {
         if (clicked.getType() == Material.ARROW) {
             String[] pending = pendingPunishments.get(player.getUniqueId());
-            UUID targetUUID = (pending != null && pending.length > 3 && !pending[3].isEmpty()) 
-                ? UUID.fromString(pending[3]) : getTargetUUID(targetName);
+            UUID targetUUID = null;
+            
+            // Try to get UUID from pending data first
+            if (pending != null && pending.length > 3 && pending[3] != null && !pending[3].isEmpty()) {
+                try {
+                    targetUUID = UUID.fromString(pending[3]);
+                } catch (IllegalArgumentException ignored) {}
+            }
+            
+            // Fallback to local lookup
+            if (targetUUID == null) {
+                targetUUID = getTargetUUID(targetName);
+            }
+            
             if (targetUUID != null) {
                 PunishGUI.openMainMenu(player, targetName, targetUUID);
             } else {
+                // For players who never joined, we need to create a fake UUID
+                // Just close and tell them to use /punish again
                 player.closeInventory();
-                player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
+                player.sendMessage(MessageUtils.PREFIX + "§7Use §f/punish " + targetName + " §7to start over.");
             }
             return;
         }
@@ -141,13 +155,25 @@ public class GUIListener implements Listener {
     private void handleMuteDuration(Player player, ItemStack clicked, String targetName) {
         if (clicked.getType() == Material.ARROW) {
             String[] pending = pendingPunishments.get(player.getUniqueId());
-            UUID targetUUID = (pending != null && pending.length > 3 && !pending[3].isEmpty()) 
-                ? UUID.fromString(pending[3]) : getTargetUUID(targetName);
+            UUID targetUUID = null;
+            
+            // Try to get UUID from pending data first
+            if (pending != null && pending.length > 3 && pending[3] != null && !pending[3].isEmpty()) {
+                try {
+                    targetUUID = UUID.fromString(pending[3]);
+                } catch (IllegalArgumentException ignored) {}
+            }
+            
+            // Fallback to local lookup
+            if (targetUUID == null) {
+                targetUUID = getTargetUUID(targetName);
+            }
+            
             if (targetUUID != null) {
                 PunishGUI.openMainMenu(player, targetName, targetUUID);
             } else {
                 player.closeInventory();
-                player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
+                player.sendMessage(MessageUtils.PREFIX + "§7Use §f/punish " + targetName + " §7to start over.");
             }
             return;
         }
@@ -165,8 +191,19 @@ public class GUIListener implements Listener {
         if (clicked.getType() == Material.ARROW) {
             // Go back
             String[] pending = pendingPunishments.get(player.getUniqueId());
-            UUID targetUUID = (pending != null && pending.length > 3 && !pending[3].isEmpty()) 
-                ? UUID.fromString(pending[3]) : getTargetUUID(targetName);
+            UUID targetUUID = null;
+            
+            // Try to get UUID from pending data first
+            if (pending != null && pending.length > 3 && pending[3] != null && !pending[3].isEmpty()) {
+                try {
+                    targetUUID = UUID.fromString(pending[3]);
+                } catch (IllegalArgumentException ignored) {}
+            }
+            
+            // Fallback to local lookup
+            if (targetUUID == null) {
+                targetUUID = getTargetUUID(targetName);
+            }
             
             if (title.startsWith(PunishGUI.BAN_REASON_TITLE)) {
                 if (pending != null && pending[1].equals("tempban")) {
@@ -175,7 +212,7 @@ public class GUIListener implements Listener {
                     PunishGUI.openMainMenu(player, targetName, targetUUID);
                 } else {
                     player.closeInventory();
-                    player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
+                    player.sendMessage(MessageUtils.PREFIX + "§7Use §f/punish " + targetName + " §7to start over.");
                 }
             } else if (title.startsWith(PunishGUI.MUTE_REASON_TITLE)) {
                 if (pending != null && pending[1].equals("tempmute")) {
@@ -184,13 +221,13 @@ public class GUIListener implements Listener {
                     PunishGUI.openMainMenu(player, targetName, targetUUID);
                 } else {
                     player.closeInventory();
-                    player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
+                    player.sendMessage(MessageUtils.PREFIX + "§7Use §f/punish " + targetName + " §7to start over.");
                 }
             } else if (targetUUID != null) {
                 PunishGUI.openMainMenu(player, targetName, targetUUID);
             } else {
                 player.closeInventory();
-                player.sendMessage(MessageUtils.PREFIX + "§cError: Could not find player.");
+                player.sendMessage(MessageUtils.PREFIX + "§7Use §f/punish " + targetName + " §7to start over.");
             }
             return;
         }
@@ -229,26 +266,23 @@ public class GUIListener implements Listener {
     }
     
     private String getDurationFromMaterial(Material material, String type) {
+        String matName = material.name();
         if (type.equals("ban")) {
-            switch (material) {
-                case COAL: return "1h";
-                case IRON_INGOT: return "1d";
-                case GOLD_INGOT: return "3d";
-                case DIAMOND: return "7d";
-                case EMERALD: return "14d";
-                case NETHERITE_INGOT: return "30d";
-                case NETHER_STAR: return "permanent";
-            }
+            if (matName.equals("COAL")) return "1h";
+            if (matName.equals("IRON_INGOT")) return "1d";
+            if (matName.equals("GOLD_INGOT")) return "3d";
+            if (matName.equals("DIAMOND")) return "7d";
+            if (matName.equals("EMERALD")) return "14d";
+            if (matName.equals("OBSIDIAN")) return "30d";
+            if (matName.equals("NETHER_STAR")) return "permanent";
         } else if (type.equals("mute")) {
-            switch (material) {
-                case COAL: return "10m";
-                case IRON_INGOT: return "30m";
-                case GOLD_INGOT: return "1h";
-                case DIAMOND: return "6h";
-                case EMERALD: return "1d";
-                case NETHERITE_INGOT: return "7d";
-                case NETHER_STAR: return "permanent";
-            }
+            if (matName.equals("COAL")) return "10m";
+            if (matName.equals("IRON_INGOT")) return "30m";
+            if (matName.equals("GOLD_INGOT")) return "1h";
+            if (matName.equals("DIAMOND")) return "6h";
+            if (matName.equals("EMERALD")) return "1d";
+            if (matName.equals("OBSIDIAN")) return "7d";
+            if (matName.equals("NETHER_STAR")) return "permanent";
         }
         return null;
     }
