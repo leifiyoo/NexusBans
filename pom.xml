@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.meinplugin</groupId>
-    <artifactId>MeinPlugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>NexusBan</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>MeinPlugin</name>
-    <description>Ein einfaches Minecraft Plugin mit Chat und Bossbar</description>
+    <name>NexusBan</name>
+    <description>Advanced punishment system with ban, mute, kick, warn and GUI</description>
 
     <properties>
         <java.version>21</java.version>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20.4-R0.1-SNAPSHOT</version>
+            <version>1.21.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -1,12 +1,167 @@
-name: MeinPlugin
+name: NexusBan
 version: 1.0
 main: de.meinplugin.MeinPlugin
-api-version: 1.20
-author: Du
-description: Ein Plugin mit Chat und Bossbar Nachricht
+api-version: 1.21
+author: NexusBan Team
+description: Advanced punishment system with ban, mute, kick, warn and GUI
 
 commands:
-  nachricht:
-    description: Zeigt eine Nachricht im Chat und in der Bossbar an
-    usage: /nachricht [text]
-    permission: meinplugin.nachricht
+  ban:
+    description: Permanently ban a player
+    usage: /ban <player> [reason]
+    permission: nexusban.ban
+  tempban:
+    description: Temporarily ban a player
+    usage: /tempban <player> <duration> [reason]
+    permission: nexusban.tempban
+  unban:
+    description: Unban a player
+    usage: /unban <player>
+    permission: nexusban.unban
+  kick:
+    description: Kick a player from the server
+    usage: /kick <player> [reason]
+    permission: nexusban.kick
+  mute:
+    description: Permanently mute a player
+    usage: /mute <player> [reason]
+    permission: nexusban.mute
+  tempmute:
+    description: Temporarily mute a player
+    usage: /tempmute <player> <duration> [reason]
+    permission: nexusban.tempmute
+  unmute:
+    description: Unmute a player
+    usage: /unmute <player>
+    permission: nexusban.unmute
+  warn:
+    description: Warn a player
+    usage: /warn <player> [reason]
+    permission: nexusban.warn
+  history:
+    description: View punishment history of a player
+    usage: /history <player>
+    permission: nexusban.history
+  punish:
+    description: Open punishment GUI
+    usage: /punish <player>
+    permission: nexusban.gui
+    aliases: [p, punishment]
+  banlist:
+    description: View all active bans
+    usage: /banlist
+    permission: nexusban.banlist
+  checkban:
+    description: Look up a ban by its ID
+    usage: /checkban <id>
+    permission: nexusban.checkban
+  ipban:
+    description: IP ban a player
+    usage: /ipban <player|ip> [reason]
+    permission: nexusban.ipban
+  unipban:
+    description: Remove an IP ban
+    usage: /unipban <player|ip>
+    permission: nexusban.unipban
+  ipbanlist:
+    description: View all active IP bans
+    usage: /ipbanlist
+    permission: nexusban.ipbanlist
+  alts:
+    description: Check for alt accounts of a player
+    usage: /alts <player>
+    permission: nexusban.alts
+
+permissions:
+  nexusban.*:
+    description: All NexusBan permissions
+    default: op
+    children:
+      nexusban.ban: true
+      nexusban.tempban: true
+      nexusban.unban: true
+      nexusban.kick: true
+      nexusban.mute: true
+      nexusban.tempmute: true
+      nexusban.unmute: true
+      nexusban.warn: true
+      nexusban.history: true
+      nexusban.gui: true
+      nexusban.banlist: true
+      nexusban.checkban: true
+      nexusban.notify: true
+      nexusban.ipban: true
+      nexusban.unipban: true
+      nexusban.ipbanlist: true
+      nexusban.alts: true
+      nexusban.alts.showip: true
+      nexusban.admin: true
+      nexusban.moderator: true
+      nexusban.exempt: true
+      nexusban.bypass.protection: true
+  nexusban.ban:
+    description: Permission to permanently ban players
+    default: op
+  nexusban.tempban:
+    description: Permission to temporarily ban players
+    default: op
+  nexusban.unban:
+    description: Permission to unban players
+    default: op
+  nexusban.kick:
+    description: Permission to kick players
+    default: op
+  nexusban.mute:
+    description: Permission to permanently mute players
+    default: op
+  nexusban.tempmute:
+    description: Permission to temporarily mute players
+    default: op
+  nexusban.unmute:
+    description: Permission to unmute players
+    default: op
+  nexusban.warn:
+    description: Permission to warn players
+    default: op
+  nexusban.history:
+    description: Permission to view punishment history
+    default: op
+  nexusban.gui:
+    description: Permission to use the punishment GUI
+    default: op
+  nexusban.banlist:
+    description: Permission to view ban list
+    default: op
+  nexusban.checkban:
+    description: Permission to look up bans by ID
+    default: op
+  nexusban.notify:
+    description: Receive punishment notifications
+    default: op
+  nexusban.ipban:
+    description: Permission to IP ban players
+    default: op
+  nexusban.unipban:
+    description: Permission to remove IP bans
+    default: op
+  nexusban.ipbanlist:
+    description: Permission to view IP ban list
+    default: op
+  nexusban.alts:
+    description: Permission to check player alts
+    default: op
+  nexusban.alts.showip:
+    description: Permission to see IP addresses in /alts
+    default: op
+  nexusban.admin:
+    description: Admin role - can punish moderators
+    default: op
+  nexusban.moderator:
+    description: Moderator role - cannot punish admins or other moderators
+    default: false
+  nexusban.exempt:
+    description: Cannot be punished by anyone (except bypass.protection)
+    default: false
+  nexusban.bypass.protection:
+    description: Bypass staff protection - can punish anyone
+    default: op

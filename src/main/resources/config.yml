@@ -1,0 +1,22 @@
+# NexusBan Configuration
+# https://github.com/NexusBan/NexusBan
+
+# Message settings
+messages:
+  prefix: "&8« &b&lNexus&3&lBan &8» &7"
+  
+# Ban screen appeal URL
+appeal-url: "discord.gg/yourserver"
+
+# Auto-punish settings (based on warning count)
+auto-punish:
+  enabled: true
+  # Number of warnings before auto-action
+  warnings-for-tempmute: 3
+  warnings-for-tempban: 5
+  warnings-for-ban: 10
+  
+# Duration for auto-punishments
+auto-durations:
+  tempmute: "1h"
+  tempban: "1d"
