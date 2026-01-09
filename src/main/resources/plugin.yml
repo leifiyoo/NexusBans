@@ -1,0 +1,12 @@
+name: MeinPlugin
+version: 1.0
+main: de.meinplugin.MeinPlugin
+api-version: 1.20
+author: Du
+description: Ein Plugin mit Chat und Bossbar Nachricht
+
+commands:
+  nachricht:
+    description: Zeigt eine Nachricht im Chat und in der Bossbar an
+    usage: /nachricht [text]
+    permission: meinplugin.nachricht
