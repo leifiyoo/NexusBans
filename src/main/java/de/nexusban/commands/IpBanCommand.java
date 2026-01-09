@@ -102,17 +102,11 @@ public class IpBanCommand implements CommandExecutor {
         // Kick all players with this IP
         for (Player online : plugin.getServer().getOnlinePlayers()) {
             if (online.getAddress().getAddress().getHostAddress().equals(ip)) {
-                online.kickPlayer(String.join("\n",
-                    "",
-                    "§c§l✦ YOUR IP HAS BEEN BANNED ✦",
-                    "",
-                    "§7Reason: §f" + reason,
-                    "§7Duration: §fPermanent",
-                    "§7Banned by: §f" + punisherName,
-                    "",
-                    "§7Appeal at: §e§ndiscord.gg/yourserver",
-                    ""
-                ));
+                online.kickPlayer(String.join("\n", MessageUtils.getIpBanScreen(
+                    reason,
+                    punisherName,
+                    "Permanent"
+                )));
             }
         }
         

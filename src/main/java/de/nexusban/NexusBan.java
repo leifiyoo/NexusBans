@@ -102,6 +102,9 @@ public class NexusBan extends JavaPlugin {
         
         getCommand("alts").setExecutor(new AltsCommand(this));
         getCommand("alts").setTabCompleter(tabCompleter);
+        
+        // Admin commands
+        getCommand("nexusbanreload").setExecutor(new ReloadCommand(this));
     }
 
     private void registerListeners() {

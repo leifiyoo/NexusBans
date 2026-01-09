@@ -5,8 +5,31 @@
 messages:
   prefix: "&8« &b&lNexus&3&lBan &8» &7"
   
-# Ban screen appeal URL
-appeal-url: "discord.gg/yourserver"
+# Discord settings (shown on ban/kick screens)
+discord:
+  # Your Discord server invite link
+  invite-url: "discord.gg/yourserver"
+  # Discord server name (shown in appeal message)
+  server-name: "Our Discord"
+
+# Rejoin warning message (shown when previously kicked/banned player rejoins)
+rejoin-warning:
+  enabled: true
+  # Message shown to player who was previously punished
+  message:
+    - "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    - ""
+    - "&c&l⚠ WARNING"
+    - ""
+    - "&7Welcome back! Please remember to follow"
+    - "&7the server rules. Another violation may"
+    - "&7result in a &cpermanent ban&7."
+    - ""
+    - "&7Read the rules: &b/rules"
+    - ""
+    - "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  # How long after punishment to show warning (in hours, 0 = always show)
+  show-for-hours: 168
 
 # Auto-punish settings (based on warning count)
 auto-punish:

@@ -171,6 +171,21 @@ public class HistoryManager {
             .count();
     }
     
+    public int getTotalPunishments(UUID uuid) {
+        return getHistory(uuid).size();
+    }
+    
+    public long getLastPunishmentTime(UUID uuid) {
+        List<Punishment> history = getHistory(uuid);
+        if (history.isEmpty()) {
+            return 0;
+        }
+        return history.stream()
+            .mapToLong(Punishment::getStartTime)
+            .max()
+            .orElse(0);
+    }
+    
     public void clearHistory(UUID uuid) {
         playerHistory.remove(uuid);
         historyConfig.set("history." + uuid.toString(), null);

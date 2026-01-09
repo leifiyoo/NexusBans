@@ -71,6 +71,11 @@ commands:
     description: Check for alt accounts of a player
     usage: /alts <player>
     permission: nexusban.alts
+  nexusbanreload:
+    description: Reload NexusBan configuration
+    usage: /nexusbanreload
+    permission: nexusban.reload
+    aliases: [nbreload, nexusreload]
 
 permissions:
   nexusban.*:
@@ -99,6 +104,7 @@ permissions:
       nexusban.moderator: true
       nexusban.exempt: true
       nexusban.bypass.protection: true
+      nexusban.reload: true
   nexusban.ban:
     description: Permission to permanently ban players
     default: op
@@ -164,4 +170,7 @@ permissions:
     default: false
   nexusban.bypass.protection:
     description: Bypass staff protection - can punish anyone
+    default: op
+  nexusban.reload:
+    description: Permission to reload NexusBan configuration
     default: op

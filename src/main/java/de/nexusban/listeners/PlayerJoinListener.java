@@ -3,12 +3,15 @@ package de.nexusban.listeners;
 import de.nexusban.NexusBan;
 import de.nexusban.data.Punishment;
 import de.nexusban.utils.MessageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -67,6 +70,42 @@ public class PlayerJoinListener implements Listener {
         checkForBannedAlts(player, ip);
     }
     
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        
+        // Check if rejoin warning is enabled
+        if (!plugin.getConfig().getBoolean("rejoin-warning.enabled", true)) {
+            return;
+        }
+        
+        // Check if player has punishment history
+        int totalPunishments = plugin.getHistoryManager().getTotalPunishments(player.getUniqueId());
+        if (totalPunishments == 0) {
+            return;
+        }
+        
+        // Check time limit for showing warning
+        int showForHours = plugin.getConfig().getInt("rejoin-warning.show-for-hours", 168);
+        if (showForHours > 0) {
+            long lastPunishment = plugin.getHistoryManager().getLastPunishmentTime(player.getUniqueId());
+            long hoursSince = (System.currentTimeMillis() - lastPunishment) / (1000 * 60 * 60);
+            if (hoursSince > showForHours) {
+                return;
+            }
+        }
+        
+        // Send warning message with delay so player can see it
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (player.isOnline()) {
+                List<String> messages = plugin.getConfig().getStringList("rejoin-warning.message");
+                for (String msg : messages) {
+                    player.sendMessage(MessageUtils.colorize(msg));
+                }
+            }
+        }, 40L); // 2 seconds delay
+    }
+    
     private void checkForBannedAlts(Player player, String ip) {
         Set<UUID> alts = plugin.getPunishmentManager().getAlts(player.getUniqueId());
         
@@ -96,17 +135,11 @@ public class PlayerJoinListener implements Listener {
             duration = MessageUtils.formatDuration(ban.getRemainingTime());
         }
         
-        String kickMessage = String.join("\n", 
-            "",
-            "§c§l✦ YOUR IP HAS BEEN BANNED ✦",
-            "",
-            "§7Reason: §f" + ban.getReason(),
-            "§7Duration: §f" + duration,
-            "§7Banned by: §f" + ban.getPunisherName(),
-            "",
-            "§7Appeal at: §e§nSee /appeal",
-            ""
-        );
+        String kickMessage = String.join("\n", MessageUtils.getIpBanScreen(
+            ban.getReason(),
+            ban.getPunisherName(),
+            duration
+        ));
         
         event.disallow(PlayerLoginEvent.Result.KICK_BANNED, kickMessage);
     }

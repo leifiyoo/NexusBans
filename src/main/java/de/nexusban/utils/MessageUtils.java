@@ -1,9 +1,11 @@
 package de.nexusban.utils;
 
+import de.nexusban.NexusBan;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,8 +22,21 @@ public class MessageUtils {
     public static final String PREFIX = "§8« §b§lNexus§3§lBan §8» §7";
     public static final String LINE = "§8§m                                                  ";
     
-    // Fancy ban screen
+    // Discord colors: Blurple (#5865F2) approximated in Minecraft
+    // Using §9 (blue) and §b (aqua) for Discord feel
+    
+    // Get Discord URL from config
+    public static String getDiscordUrl() {
+        return NexusBan.getInstance().getConfig().getString("discord.invite-url", "discord.gg/yourserver");
+    }
+    
+    public static String getDiscordServerName() {
+        return NexusBan.getInstance().getConfig().getString("discord.server-name", "Our Discord");
+    }
+    
+    // Fancy ban screen with Discord styling
     public static String[] getBanScreen(String reason, String punisher, String duration, String id) {
+        String discordUrl = getDiscordUrl();
         return new String[] {
             "",
             "§c§l✦ YOU HAVE BEEN BANNED ✦",
@@ -30,14 +45,34 @@ public class MessageUtils {
             "§7Duration: §f" + duration,
             "§7Banned by: §f" + punisher,
             "",
-            "§7Appeal at: §e§nSee /appeal",
-            "§8ID: " + id,
+            "§9§l◆ §b§nAPPEAL ON DISCORD§r §9§l◆",
+            "§9" + discordUrl,
+            "",
+            "§8Ban ID: " + id,
+            ""
+        };
+    }
+    
+    // IP Ban screen with Discord styling  
+    public static String[] getIpBanScreen(String reason, String punisher, String duration) {
+        String discordUrl = getDiscordUrl();
+        return new String[] {
+            "",
+            "§c§l✦ YOUR IP HAS BEEN BANNED ✦",
+            "",
+            "§7Reason: §f" + reason,
+            "§7Duration: §f" + duration,
+            "§7Banned by: §f" + punisher,
+            "",
+            "§9§l◆ §b§nAPPEAL ON DISCORD§r §9§l◆",
+            "§9" + discordUrl,
             ""
         };
     }
     
     // Fancy kick screen
     public static String[] getKickScreen(String reason, String punisher) {
+        String discordUrl = getDiscordUrl();
         return new String[] {
             "",
             "§6§l✦ YOU HAVE BEEN KICKED ✦",
@@ -46,6 +81,8 @@ public class MessageUtils {
             "§7Kicked by: §f" + punisher,
             "",
             "§aYou may rejoin the server.",
+            "",
+            "§9§l◆ §bQuestions? Join: §9" + discordUrl + " §9§l◆",
             ""
         };
     }
