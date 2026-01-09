@@ -1,5 +1,5 @@
 name: NexusBan
-version: 1.0
+version: 1.0.1
 main: de.nexusban.NexusBan
 api-version: "1.13"
 author: NexusBan Team
@@ -72,9 +72,9 @@ commands:
     description: Check for alt accounts of a player
     usage: /alts <player>
     permission: nexusban.alts
-  nexusbanreload:
+  nbreload:
     description: Reload NexusBan configuration
-    usage: /nexusbanreload
+    usage: /nbreload
     permission: nexusban.reload
 
 permissions:

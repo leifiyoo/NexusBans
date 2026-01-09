@@ -91,7 +91,7 @@
 | `/ipbanlist` | List all IP bans |
 | `/alts <player>` | Check for alt accounts |
 | `/checkban <id>` | Look up ban details |
-| `/nexusbanreload` | Reload configuration |
+| `/nbreload` | Reload configuration |
 
 ### ⏱️ Time Format
 
@@ -130,7 +130,7 @@ Combined: 1d12h30m = 1 day, 12 hours, 30 minutes
 | `nexusban.checkban` | Use /checkban | OP |
 | `nexusban.alts` | Use /alts | OP |
 | `nexusban.alts.showip` | See IPs in /alts | OP |
-| `nexusban.reload` | Use /nexusbanreload | OP |
+| `nexusban.reload` | Use /nbreload | OP |
 | `nexusban.notify` | Receive staff alerts | OP |
 | `nexusban.exempt` | Cannot be punished | false |
 | `nexusban.admin` | Admin-level staff | false |
