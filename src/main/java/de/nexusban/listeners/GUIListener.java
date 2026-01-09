@@ -84,41 +84,34 @@ public class GUIListener implements Listener {
     
     private void handleMainMenu(Player player, ItemStack clicked, String targetName) {
         Material type = clicked.getType();
+        String typeName = type.name();
         UUID targetUUID = getTargetUUID(targetName);
         String uuidStr = targetUUID != null ? targetUUID.toString() : "";
         
-        switch (type) {
-            case BARRIER: // Ban
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "ban", "permanent", uuidStr});
-                PunishGUI.openReasonMenu(player, targetName, "ban");
-                break;
-            case CLOCK: // Temp Ban
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempban", null, uuidStr});
-                PunishGUI.openBanDurationMenu(player, targetName);
-                break;
-            case IRON_BOOTS: // Kick
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "kick", null, uuidStr});
-                PunishGUI.openReasonMenu(player, targetName, "kick");
-                break;
-            case PAPER: // Mute
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "mute", "permanent", uuidStr});
-                PunishGUI.openReasonMenu(player, targetName, "mute");
-                break;
-            case BOOK: // Temp Mute
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempmute", null, uuidStr});
-                PunishGUI.openMuteDurationMenu(player, targetName);
-                break;
-            case SUNFLOWER: // Warn
-                pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "warn", null, uuidStr});
-                PunishGUI.openReasonMenu(player, targetName, "warn");
-                break;
-            case WRITABLE_BOOK: // History
-                player.closeInventory();
-                player.performCommand("history " + targetName);
-                break;
-            case REDSTONE_BLOCK: // Close
-                player.closeInventory();
-                break;
+        // Handle version-specific materials
+        if (type == Material.BARRIER) { // Ban
+            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "ban", "permanent", uuidStr});
+            PunishGUI.openReasonMenu(player, targetName, "ban");
+        } else if (typeName.equals("CLOCK") || typeName.equals("WATCH")) { // Temp Ban
+            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempban", null, uuidStr});
+            PunishGUI.openBanDurationMenu(player, targetName);
+        } else if (type == Material.IRON_BOOTS) { // Kick
+            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "kick", null, uuidStr});
+            PunishGUI.openReasonMenu(player, targetName, "kick");
+        } else if (type == Material.PAPER) { // Mute
+            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "mute", "permanent", uuidStr});
+            PunishGUI.openReasonMenu(player, targetName, "mute");
+        } else if (type == Material.BOOK) { // Temp Mute
+            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "tempmute", null, uuidStr});
+            PunishGUI.openMuteDurationMenu(player, targetName);
+        } else if (type == Material.BLAZE_POWDER) { // Warn
+            pendingPunishments.put(player.getUniqueId(), new String[]{targetName, "warn", null, uuidStr});
+            PunishGUI.openReasonMenu(player, targetName, "warn");
+        } else if (typeName.equals("WRITABLE_BOOK") || typeName.equals("BOOK_AND_QUILL")) { // History
+            player.closeInventory();
+            player.performCommand("history " + targetName);
+        } else if (type == Material.REDSTONE_BLOCK) { // Close
+            player.closeInventory();
         }
     }
     

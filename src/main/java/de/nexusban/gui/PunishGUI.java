@@ -2,6 +2,7 @@ package de.nexusban.gui;
 
 import de.nexusban.NexusBan;
 import de.nexusban.data.Punishment;
+import de.nexusban.utils.MaterialCompat;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,45 +28,48 @@ public class PunishGUI {
     public static void openMainMenu(Player staff, String targetName, UUID targetUUID) {
         Inventory inv = Bukkit.createInventory(null, 54, MAIN_MENU_TITLE + targetName);
         
-        // Fill borders with black glass
-        ItemStack blackGlass = createItem(Material.BLACK_STAINED_GLASS_PANE, " ", null);
-        ItemStack redGlass = createItem(Material.RED_STAINED_GLASS_PANE, " ", null);
+        // Fill borders with black glass (compatible)
+        ItemStack blackGlass = MaterialCompat.getBlackGlass();
+        setItemName(blackGlass, " ");
+        ItemStack redGlass = MaterialCompat.getRedGlass();
+        setItemName(redGlass, " ");
         
         // Top and bottom borders
         for (int i = 0; i < 9; i++) {
-            inv.setItem(i, blackGlass);
-            inv.setItem(45 + i, blackGlass);
+            inv.setItem(i, blackGlass.clone());
+            inv.setItem(45 + i, blackGlass.clone());
         }
         // Side borders
         for (int i = 1; i < 5; i++) {
-            inv.setItem(i * 9, blackGlass);
-            inv.setItem(i * 9 + 8, blackGlass);
+            inv.setItem(i * 9, blackGlass.clone());
+            inv.setItem(i * 9 + 8, blackGlass.clone());
         }
         
         // Fill middle with gray glass
-        ItemStack grayGlass = createItem(Material.GRAY_STAINED_GLASS_PANE, " ", null);
+        ItemStack grayGlass = MaterialCompat.getGrayGlass();
+        setItemName(grayGlass, " ");
         for (int i = 10; i < 44; i++) {
             if (inv.getItem(i) == null) {
-                inv.setItem(i, grayGlass);
+                inv.setItem(i, grayGlass.clone());
             }
         }
         
         // Decorative red corners
-        inv.setItem(0, redGlass);
-        inv.setItem(8, redGlass);
-        inv.setItem(45, redGlass);
-        inv.setItem(53, redGlass);
+        inv.setItem(0, redGlass.clone());
+        inv.setItem(8, redGlass.clone());
+        inv.setItem(45, redGlass.clone());
+        inv.setItem(53, redGlass.clone());
         
         // Player head in center top
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack skull = MaterialCompat.getPlayerHeadItem();
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(targetUUID));
-        skullMeta.setDisplayName("§c§l⚔ §f§l" + targetName + " §c§l⚔");
+        skullMeta.setDisplayName("§c§l» §f§l" + targetName + " §c§l«");
         
         // Get player info - UUID is already provided, no need to fetch
         int warnings = 0;
-        String banStatus = "§a✔ Not Banned";
-        String muteStatus = "§a✔ Not Muted";
+        String banStatus = "§a+ Not Banned";
+        String muteStatus = "§a+ Not Muted";
         String onlineStatus = Bukkit.getPlayer(targetName) != null ? "§a● Online" : "§c○ Offline";
         
         warnings = NexusBan.getInstance().getHistoryManager().getWarningCount(targetUUID);
@@ -99,19 +103,19 @@ public class PunishGUI {
         // ═══════════════════════════════════════
         
         // Row 2: Ban options
-        inv.setItem(19, createItem(Material.BARRIER, "§4§l☠ PERMANENT BAN", Arrays.asList(
+        inv.setItem(19, createItem(Material.BARRIER, "§4§lPERMANENT BAN", Arrays.asList(
             "§8§m─────────────────────",
             "",
             "§7Permanently remove this",
             "§7player from the server.",
             "",
-            "§c⚠ This is irreversible!",
+            "§c! This is irreversible!",
             "",
             "§8§m─────────────────────",
-            "§e➤ Left-Click to ban"
+            "§e> Left-Click to ban"
         )));
         
-        inv.setItem(20, createItem(Material.CLOCK, "§c§l⏰ TEMP BAN", Arrays.asList(
+        inv.setItem(20, createItem(MaterialCompat.getClock(), "§c§lTEMP BAN", Arrays.asList(
             "§8§m─────────────────────",
             "",
             "§7Temporarily ban player",
@@ -121,36 +125,36 @@ public class PunishGUI {
             "§8 » §f1h, 1d, 3d, 7d, 14d, 30d",
             "",
             "§8§m─────────────────────",
-            "§e➤ Left-Click to select time"
+            "§e> Left-Click to select time"
         )));
         
         // Row 2: Middle - Kick
-        inv.setItem(22, createItem(Material.IRON_BOOTS, "§6§l👢 KICK", Arrays.asList(
+        inv.setItem(22, createItem(Material.IRON_BOOTS, "§6§lKICK", Arrays.asList(
             "§8§m─────────────────────",
             "",
             "§7Kick player from server.",
             "§7They can rejoin after.",
             "",
-            "§a✔ Non-permanent action",
+            "§a+ Non-permanent action",
             "",
             "§8§m─────────────────────",
-            "§e➤ Left-Click to kick"
+            "§e> Left-Click to kick"
         )));
         
         // Row 2: Mute options
-        inv.setItem(24, createItem(Material.PAPER, "§6§l🔇 PERMANENT MUTE", Arrays.asList(
+        inv.setItem(24, createItem(Material.PAPER, "§6§lPERMANENT MUTE", Arrays.asList(
             "§8§m─────────────────────",
             "",
             "§7Permanently mute player.",
             "§7They cannot chat anymore.",
             "",
-            "§c⚠ Permanent action!",
+            "§c! Permanent action!",
             "",
             "§8§m─────────────────────",
-            "§e➤ Left-Click to mute"
+            "§e> Left-Click to mute"
         )));
         
-        inv.setItem(25, createItem(Material.BOOK, "§e§l⏰ TEMP MUTE", Arrays.asList(
+        inv.setItem(25, createItem(Material.BOOK, "§e§lTEMP MUTE", Arrays.asList(
             "§8§m─────────────────────",
             "",
             "§7Temporarily mute player",
@@ -160,11 +164,11 @@ public class PunishGUI {
             "§8 » §f10m, 30m, 1h, 6h, 1d, 7d",
             "",
             "§8§m─────────────────────",
-            "§e➤ Left-Click to select time"
+            "§e> Left-Click to select time"
         )));
         
         // Row 3: Warn in center
-        inv.setItem(31, createItem(Material.SUNFLOWER, "§e§l⚠ WARN", Arrays.asList(
+        inv.setItem(31, createItem(Material.BLAZE_POWDER, "§e§lWARN", Arrays.asList(
             "§8§m─────────────────────",
             "",
             "§7Issue a warning to player.",
@@ -175,11 +179,11 @@ public class PunishGUI {
             "§8 » §fConsider stronger action",
             "",
             "§8§m─────────────────────",
-            "§e➤ Left-Click to warn"
+            "§e> Left-Click to warn"
         )));
         
         // Row 4: Utility buttons
-        inv.setItem(39, createItem(Material.WRITABLE_BOOK, "§b§l📋 VIEW HISTORY", Arrays.asList(
+        inv.setItem(39, createItem(MaterialCompat.getWritableBook(), "§b§lVIEW HISTORY", Arrays.asList(
             "§8§m─────────────────────",
             "",
             "§7View full punishment",
@@ -189,16 +193,16 @@ public class PunishGUI {
             "§7Kicks, Warnings",
             "",
             "§8§m─────────────────────",
-            "§e➤ Left-Click to view"
+            "§e> Left-Click to view"
         )));
         
-        inv.setItem(41, createItem(Material.REDSTONE_BLOCK, "§c§l✘ CLOSE", Arrays.asList(
+        inv.setItem(41, createItem(Material.REDSTONE_BLOCK, "§c§lCLOSE", Arrays.asList(
             "§8§m─────────────────────",
             "",
             "§7Close this menu.",
             "",
             "§8§m─────────────────────",
-            "§e➤ Left-Click to close"
+            "§e> Left-Click to close"
         )));
         
         // Plugin info
@@ -218,16 +222,18 @@ public class PunishGUI {
         Inventory inv = Bukkit.createInventory(null, 36, BAN_DURATION_TITLE + targetName);
         
         // Fill with dark red glass
-        ItemStack filler = createItem(Material.RED_STAINED_GLASS_PANE, " ", null);
-        ItemStack blackGlass = createItem(Material.BLACK_STAINED_GLASS_PANE, " ", null);
+        ItemStack filler = MaterialCompat.getRedGlass();
+        setItemName(filler, " ");
+        ItemStack blackGlass = MaterialCompat.getBlackGlass();
+        setItemName(blackGlass, " ");
         
         for (int i = 0; i < 36; i++) {
-            inv.setItem(i, filler);
+            inv.setItem(i, filler.clone());
         }
         // Borders
         for (int i = 0; i < 9; i++) {
-            inv.setItem(i, blackGlass);
-            inv.setItem(27 + i, blackGlass);
+            inv.setItem(i, blackGlass.clone());
+            inv.setItem(27 + i, blackGlass.clone());
         }
         
         // Duration options with better icons
@@ -236,22 +242,22 @@ public class PunishGUI {
         inv.setItem(12, createDurationItem(Material.GOLD_INGOT, "§6§l3 DAYS", "3d", "§8Extended temporary ban"));
         inv.setItem(14, createDurationItem(Material.DIAMOND, "§b§l7 DAYS", "7d", "§8Week-long ban"));
         inv.setItem(15, createDurationItem(Material.EMERALD, "§a§l14 DAYS", "14d", "§8Two week ban"));
-        inv.setItem(16, createDurationItem(Material.NETHERITE_INGOT, "§8§l30 DAYS", "30d", "§8Month-long ban"));
+        inv.setItem(16, createDurationItem(Material.OBSIDIAN, "§8§l30 DAYS", "30d", "§8Month-long ban"));
         
         // Permanent in center
-        inv.setItem(22, createItem(Material.NETHER_STAR, "§4§l☠ PERMANENT", Arrays.asList(
+        inv.setItem(22, createItem(Material.NETHER_STAR, "§4§lPERMANENT", Arrays.asList(
             "§8§m─────────────────",
             "",
             "§7Duration: §4Forever",
             "",
-            "§c⚠ Cannot be undone!",
+            "§c! Cannot be undone!",
             "",
             "§8§m─────────────────",
-            "§e➤ Click to select"
+            "§e> Click to select"
         )));
         
         // Back button
-        inv.setItem(31, createItem(Material.ARROW, "§c§l← BACK", Arrays.asList("", "§7Return to main menu")));
+        inv.setItem(31, createItem(Material.ARROW, "§c§l<- BACK", Arrays.asList("", "§7Return to main menu")));
         
         staff.openInventory(inv);
     }
@@ -259,17 +265,19 @@ public class PunishGUI {
     public static void openMuteDurationMenu(Player staff, String targetName) {
         Inventory inv = Bukkit.createInventory(null, 36, MUTE_DURATION_TITLE + targetName);
         
-        // Fill with orange glass
-        ItemStack filler = createItem(Material.ORANGE_STAINED_GLASS_PANE, " ", null);
-        ItemStack blackGlass = createItem(Material.BLACK_STAINED_GLASS_PANE, " ", null);
+        // Fill with gray glass (orange isn't available in legacy)
+        ItemStack filler = MaterialCompat.getGrayGlass();
+        setItemName(filler, " ");
+        ItemStack blackGlass = MaterialCompat.getBlackGlass();
+        setItemName(blackGlass, " ");
         
         for (int i = 0; i < 36; i++) {
-            inv.setItem(i, filler);
+            inv.setItem(i, filler.clone());
         }
         // Borders
         for (int i = 0; i < 9; i++) {
-            inv.setItem(i, blackGlass);
-            inv.setItem(27 + i, blackGlass);
+            inv.setItem(i, blackGlass.clone());
+            inv.setItem(27 + i, blackGlass.clone());
         }
         
         // Duration options
@@ -278,101 +286,110 @@ public class PunishGUI {
         inv.setItem(12, createDurationItem(Material.GOLD_INGOT, "§6§l1 HOUR", "1h", "§8Standard mute"));
         inv.setItem(14, createDurationItem(Material.DIAMOND, "§b§l6 HOURS", "6h", "§8Extended mute"));
         inv.setItem(15, createDurationItem(Material.EMERALD, "§a§l1 DAY", "1d", "§8Day-long mute"));
-        inv.setItem(16, createDurationItem(Material.NETHERITE_INGOT, "§8§l7 DAYS", "7d", "§8Week-long mute"));
+        inv.setItem(16, createDurationItem(Material.OBSIDIAN, "§8§l7 DAYS", "7d", "§8Week-long mute"));
         
         // Permanent in center
-        inv.setItem(22, createItem(Material.NETHER_STAR, "§6§l🔇 PERMANENT", Arrays.asList(
+        inv.setItem(22, createItem(Material.NETHER_STAR, "§6§lPERMANENT", Arrays.asList(
             "§8§m─────────────────",
             "",
             "§7Duration: §6Forever",
             "",
-            "§e⚠ Permanent silence!",
+            "§e! Permanent silence!",
             "",
             "§8§m─────────────────",
-            "§e➤ Click to select"
+            "§e> Click to select"
         )));
         
         // Back button
-        inv.setItem(31, createItem(Material.ARROW, "§c§l← BACK", Arrays.asList("", "§7Return to main menu")));
+        inv.setItem(31, createItem(Material.ARROW, "§c§l<- BACK", Arrays.asList("", "§7Return to main menu")));
         
         staff.openInventory(inv);
     }
     
     public static void openReasonMenu(Player staff, String targetName, String type) {
         String title;
-        Material fillerMaterial;
-        Material borderMaterial = Material.BLACK_STAINED_GLASS_PANE;
+        ItemStack filler;
+        ItemStack border = MaterialCompat.getBlackGlass();
+        setItemName(border, " ");
         
         switch (type) {
             case "ban":
                 title = BAN_REASON_TITLE + targetName;
-                fillerMaterial = Material.RED_STAINED_GLASS_PANE;
+                filler = MaterialCompat.getRedGlass();
                 break;
             case "mute":
                 title = MUTE_REASON_TITLE + targetName;
-                fillerMaterial = Material.ORANGE_STAINED_GLASS_PANE;
+                filler = MaterialCompat.getGrayGlass();
                 break;
             case "kick":
                 title = KICK_REASON_TITLE + targetName;
-                fillerMaterial = Material.YELLOW_STAINED_GLASS_PANE;
+                filler = MaterialCompat.getGrayGlass();
                 break;
             case "warn":
                 title = WARN_REASON_TITLE + targetName;
-                fillerMaterial = Material.LIME_STAINED_GLASS_PANE;
+                filler = MaterialCompat.getGrayGlass();
                 break;
             default:
                 return;
         }
+        setItemName(filler, " ");
         
         Inventory inv = Bukkit.createInventory(null, 45, title);
         
         // Fill
-        ItemStack filler = createItem(fillerMaterial, " ", null);
-        ItemStack border = createItem(borderMaterial, " ", null);
-        
         for (int i = 0; i < 45; i++) {
-            inv.setItem(i, filler);
+            inv.setItem(i, filler.clone());
         }
         // Borders
         for (int i = 0; i < 9; i++) {
-            inv.setItem(i, border);
-            inv.setItem(36 + i, border);
+            inv.setItem(i, border.clone());
+            inv.setItem(36 + i, border.clone());
         }
         
-        // Reason options based on type
+        // Reason options based on type (using compatible materials)
+        Material skullMat = MaterialCompat.getPlayerHead();
+        
         if (type.equals("ban")) {
             inv.setItem(10, createReasonItem(Material.DIAMOND_SWORD, "§c§lHACKING", "Hacking / Cheating", "§7Using unfair advantages"));
             inv.setItem(11, createReasonItem(Material.TNT, "§c§lGRIEFING", "Griefing", "§7Destroying others' builds"));
             inv.setItem(12, createReasonItem(Material.REPEATER, "§c§lEXPLOITING", "Bug Exploiting", "§7Abusing game bugs"));
-            inv.setItem(14, createReasonItem(Material.SKELETON_SKULL, "§c§lTOXICITY", "Toxic Behavior", "§7Extreme toxic behavior"));
+            inv.setItem(14, createReasonItem(Material.BONE, "§c§lTOXICITY", "Toxic Behavior", "§7Extreme toxic behavior"));
             inv.setItem(15, createReasonItem(Material.NAME_TAG, "§c§lADVERTISING", "Advertising", "§7Promoting other servers"));
-            inv.setItem(16, createReasonItem(Material.PLAYER_HEAD, "§c§lBAN EVASION", "Ban Evasion", "§7Alt account of banned player"));
-            inv.setItem(22, createReasonItem(Material.COMMAND_BLOCK, "§c§lOTHER", "Other", "§7Custom reason"));
+            inv.setItem(16, createReasonItem(skullMat, "§c§lBAN EVASION", "Ban Evasion", "§7Alt account of banned player"));
+            inv.setItem(22, createReasonItem(Material.BEDROCK, "§c§lOTHER", "Other", "§7Custom reason"));
         } else if (type.equals("mute")) {
             inv.setItem(10, createReasonItem(Material.PAPER, "§6§lSPAMMING", "Chat Spam", "§7Flooding the chat"));
-            inv.setItem(11, createReasonItem(Material.SKELETON_SKULL, "§6§lTOXICITY", "Toxic Behavior", "§7Being toxic in chat"));
+            inv.setItem(11, createReasonItem(Material.BONE, "§6§lTOXICITY", "Toxic Behavior", "§7Being toxic in chat"));
             inv.setItem(12, createReasonItem(Material.NAME_TAG, "§6§lADVERTISING", "Advertising", "§7Promoting other servers"));
             inv.setItem(14, createReasonItem(Material.BOOK, "§6§lLANGUAGE", "Inappropriate Language", "§7Using bad language"));
             inv.setItem(15, createReasonItem(Material.IRON_SWORD, "§6§lHARASSMENT", "Harassment", "§7Harassing other players"));
-            inv.setItem(16, createReasonItem(Material.COMMAND_BLOCK, "§6§lOTHER", "Other", "§7Custom reason"));
+            inv.setItem(16, createReasonItem(Material.BEDROCK, "§6§lOTHER", "Other", "§7Custom reason"));
         } else if (type.equals("kick")) {
             inv.setItem(11, createReasonItem(Material.HOPPER, "§e§lAFK", "Being AFK", "§7Away from keyboard"));
             inv.setItem(12, createReasonItem(Material.PAPER, "§e§lSPAMMING", "Chat Spam", "§7Flooding the chat"));
-            inv.setItem(14, createReasonItem(Material.SKELETON_SKULL, "§e§lBEHAVIOR", "Inappropriate Behavior", "§7Breaking rules"));
-            inv.setItem(15, createReasonItem(Material.COMMAND_BLOCK, "§e§lOTHER", "Other", "§7Custom reason"));
+            inv.setItem(14, createReasonItem(Material.BONE, "§e§lBEHAVIOR", "Inappropriate Behavior", "§7Breaking rules"));
+            inv.setItem(15, createReasonItem(Material.BEDROCK, "§e§lOTHER", "Other", "§7Custom reason"));
         } else if (type.equals("warn")) {
             inv.setItem(10, createReasonItem(Material.PAPER, "§e§lSPAMMING", "Chat Spam", "§7Flooding the chat"));
-            inv.setItem(11, createReasonItem(Material.SKELETON_SKULL, "§e§lTOXICITY", "Toxic Behavior", "§7Being toxic"));
+            inv.setItem(11, createReasonItem(Material.BONE, "§e§lTOXICITY", "Toxic Behavior", "§7Being toxic"));
             inv.setItem(12, createReasonItem(Material.BOOK, "§e§lLANGUAGE", "Inappropriate Language", "§7Using bad language"));
             inv.setItem(14, createReasonItem(Material.IRON_SWORD, "§e§lBEHAVIOR", "Inappropriate Behavior", "§7Breaking rules"));
             inv.setItem(15, createReasonItem(Material.BARRIER, "§e§lRULES", "Breaking Rules", "§7General rule violation"));
-            inv.setItem(16, createReasonItem(Material.COMMAND_BLOCK, "§e§lOTHER", "Other", "§7Custom reason"));
+            inv.setItem(16, createReasonItem(Material.BEDROCK, "§e§lOTHER", "Other", "§7Custom reason"));
         }
         
         // Back button
-        inv.setItem(40, createItem(Material.ARROW, "§c§l← BACK", Arrays.asList("", "§7Return to previous menu")));
+        inv.setItem(40, createItem(Material.ARROW, "§c§l<- BACK", Arrays.asList("", "§7Return to previous menu")));
         
         staff.openInventory(inv);
+    }
+    
+    private static void setItemName(ItemStack item, String name) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(name);
+            item.setItemMeta(meta);
+        }
     }
     
     private static ItemStack createItem(Material material, String name, List<String> lore) {
@@ -394,7 +411,7 @@ public class PunishGUI {
             description,
             "",
             "§8§m─────────────────",
-            "§e➤ Click to select"
+            "§e> Click to select"
         ));
     }
     
@@ -406,7 +423,7 @@ public class PunishGUI {
             description,
             "",
             "§8§m─────────────────",
-            "§e➤ Click to apply"
+            "§e> Click to apply"
         ));
     }
 }
