@@ -1,106 +1,144 @@
-# NexusBan
+<p align="center">
+  <img src="https://img.shields.io/badge/Minecraft-1.21.4-green?style=for-the-badge&logo=minecraft" alt="Minecraft">
+  <img src="https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk" alt="Java">
+  <img src="https://img.shields.io/badge/Spigot-API-yellow?style=for-the-badge" alt="Spigot">
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License">
+</p>
 
-A powerful and modern punishment system for Minecraft Spigot servers.
+<h1 align="center">🛡️ NexusBan</h1>
 
-![Java](https://img.shields.io/badge/Java-21-orange)
-![Spigot](https://img.shields.io/badge/Spigot-1.21.4-yellow)
-![License](https://img.shields.io/badge/License-MIT-green)
+<p align="center">
+  <b>A powerful, modern punishment system for Minecraft Spigot servers</b><br>
+  <i>Keep your server safe with advanced moderation tools</i>
+</p>
 
-## Features
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-commands">Commands</a> •
+  <a href="#-permissions">Permissions</a> •
+  <a href="#%EF%B8%8F-configuration">Configuration</a>
+</p>
 
-- **Ban System** - Permanent and temporary bans
-- **IP-Ban System** - Block players by IP address
-- **Alt Detection** - Automatically detect alt accounts
-- **Mute System** - Permanent and temporary mutes  
-- **Kick System** - Kick players with custom reasons
-- **Warning System** - Track player warnings with auto-punish
-- **Punishment GUI** - Easy-to-use graphical interface
-- **Ban History** - View complete punishment history
+---
+
+## ✨ Features
+
+<table>
+<tr>
+<td width="50%">
+
+### 🔨 Punishment System
+- **Permanent Bans** - Ban troublemakers forever
+- **Temporary Bans** - Time-based bans with auto-expiry
+- **IP Bans** - Block by IP address
+- **Mutes** - Permanent & temporary mutes
+- **Kicks** - Remove players instantly
+- **Warnings** - Track player behavior
+
+</td>
+<td width="50%">
+
+### 🔍 Advanced Features
+- **Alt Detection** - Find alt accounts by IP
+- **Punishment GUI** - Easy point-and-click interface
+- **Ban History** - Complete punishment records
 - **Staff Protection** - Prevent staff from punishing each other
-- **Async File I/O** - No server lag from saving data
+- **Async I/O** - Zero server lag
+- **Auto-Punish** - Automatic escalation based on warnings
 
-## Commands
+</td>
+</tr>
+</table>
 
-| Command | Description | Permission |
-|---------|-------------|------------|
-| `/ban <player> [reason]` | Permanently ban a player | `nexusban.ban` |
-| `/tempban <player> <duration> [reason]` | Temporarily ban a player | `nexusban.tempban` |
-| `/unban <player>` | Unban a player | `nexusban.unban` |
-| `/ipban <player\|ip> [reason]` | IP ban a player | `nexusban.ipban` |
-| `/unipban <player\|ip>` | Remove an IP ban | `nexusban.unipban` |
-| `/ipbanlist` | View all active IP bans | `nexusban.ipbanlist` |
-| `/kick <player> [reason]` | Kick a player | `nexusban.kick` |
-| `/mute <player> [reason]` | Permanently mute a player | `nexusban.mute` |
-| `/tempmute <player> <duration> [reason]` | Temporarily mute a player | `nexusban.tempmute` |
-| `/unmute <player>` | Unmute a player | `nexusban.unmute` |
-| `/warn <player> [reason]` | Warn a player | `nexusban.warn` |
-| `/history <player>` | View punishment history | `nexusban.history` |
-| `/punish <player>` | Open punishment GUI | `nexusban.gui` |
-| `/banlist` | View all active bans | `nexusban.banlist` |
-| `/checkban <id>` | Look up a ban by ID | `nexusban.checkban` |
-| `/alts <player>` | Check for alt accounts | `nexusban.alts` |
+---
 
-## Duration Format
+## 📦 Installation
 
-- `s` - Seconds (e.g., `30s`)
-- `m` - Minutes (e.g., `10m`)
-- `h` - Hours (e.g., `2h`)
-- `d` - Days (e.g., `7d`)
-- `w` - Weeks (e.g., `2w`)
-- `M` - Months (e.g., `1M`)
-- `y` - Years (e.g., `1y`)
+1. **Download** the latest release from [Releases](../../releases)
+2. **Drop** `NexusBan-1.0.jar` into your server's `plugins/` folder
+3. **Restart** your server
+4. **Configure** in `plugins/NexusBan/config.yml`
 
-Combine them: `1d12h30m` = 1 day, 12 hours, 30 minutes
+---
 
-## Permissions
+## 🎮 Commands
 
-| Permission | Description |
-|------------|-------------|
-| `nexusban.*` | All permissions |
-| `nexusban.ban` | Use /ban command |
-| `nexusban.tempban` | Use /tempban command |
-| `nexusban.unban` | Use /unban command |
-| `nexusban.ipban` | Use /ipban command |
-| `nexusban.unipban` | Use /unipban command |
-| `nexusban.ipbanlist` | Use /ipbanlist command |
-| `nexusban.kick` | Use /kick command |
-| `nexusban.mute` | Use /mute command |
-| `nexusban.tempmute` | Use /tempmute command |
-| `nexusban.unmute` | Use /unmute command |
-| `nexusban.warn` | Use /warn command |
-| `nexusban.history` | Use /history command |
-| `nexusban.gui` | Use /punish GUI |
-| `nexusban.banlist` | Use /banlist command |
-| `nexusban.checkban` | Use /checkban command |
-| `nexusban.alts` | Use /alts command |
-| `nexusban.alts.showip` | See IP addresses in /alts |
-| `nexusban.notify` | Receive staff notifications |
-| `nexusban.exempt` | Cannot be punished |
-| `nexusban.admin` | Admin-level staff (cannot be punished by moderators) |
-| `nexusban.moderator` | Moderator-level staff |
+### Ban Commands
+| Command | Description | Example |
+|---------|-------------|---------|
+| `/ban <player> [reason]` | Permanent ban | `/ban Griefer123 Griefing spawn` |
+| `/tempban <player> <time> [reason]` | Temporary ban | `/tempban Hacker 7d Using xray` |
+| `/unban <player>` | Remove a ban | `/unban Griefer123` |
+| `/ipban <player\|ip> [reason]` | IP ban | `/ipban Evader Alt account` |
+| `/unipban <player\|ip>` | Remove IP ban | `/unipban 192.168.1.1` |
 
-## Installation
+### Mute Commands
+| Command | Description | Example |
+|---------|-------------|---------|
+| `/mute <player> [reason]` | Permanent mute | `/mute Spammer Spam in chat` |
+| `/tempmute <player> <time> [reason]` | Temporary mute | `/tempmute Toxic 1h Toxic behavior` |
+| `/unmute <player>` | Remove mute | `/unmute Spammer` |
 
-1. Download the latest release from [Releases](../../releases)
-2. Place `NexusBan-1.0.jar` in your server's `plugins/` folder
-3. Restart your server
-4. Configure the plugin in `plugins/NexusBan/config.yml`
+### Other Commands
+| Command | Description |
+|---------|-------------|
+| `/kick <player> [reason]` | Kick from server |
+| `/warn <player> [reason]` | Issue a warning |
+| `/punish <player>` | Open punishment GUI |
+| `/history <player>` | View punishment history |
+| `/banlist` | List all active bans |
+| `/ipbanlist` | List all IP bans |
+| `/alts <player>` | Check for alt accounts |
+| `/checkban <id>` | Look up ban details |
 
-## Building from Source
+### ⏱️ Time Format
 
-Requirements:
-- Java 21+
-- Maven 3.6+
+```
+s = Seconds    m = Minutes    h = Hours
+d = Days       w = Weeks      M = Months    y = Years
 
-```bash
-git clone https://github.com/yourusername/NexusBan.git
-cd NexusBan
-mvn clean package
+Examples: 30m, 2h, 7d, 2w, 1M, 1y
+Combined: 1d12h30m = 1 day, 12 hours, 30 minutes
 ```
 
-The compiled JAR will be in `target/NexusBan-1.0.jar`
+---
 
-## Configuration
+## 🔐 Permissions
+
+<details>
+<summary><b>Click to expand permission list</b></summary>
+
+| Permission | Description | Default |
+|------------|-------------|---------|
+| `nexusban.*` | All permissions | OP |
+| `nexusban.ban` | Use /ban | OP |
+| `nexusban.tempban` | Use /tempban | OP |
+| `nexusban.unban` | Use /unban | OP |
+| `nexusban.ipban` | Use /ipban | OP |
+| `nexusban.unipban` | Use /unipban | OP |
+| `nexusban.ipbanlist` | Use /ipbanlist | OP |
+| `nexusban.kick` | Use /kick | OP |
+| `nexusban.mute` | Use /mute | OP |
+| `nexusban.tempmute` | Use /tempmute | OP |
+| `nexusban.unmute` | Use /unmute | OP |
+| `nexusban.warn` | Use /warn | OP |
+| `nexusban.history` | Use /history | OP |
+| `nexusban.gui` | Use /punish GUI | OP |
+| `nexusban.banlist` | Use /banlist | OP |
+| `nexusban.checkban` | Use /checkban | OP |
+| `nexusban.alts` | Use /alts | OP |
+| `nexusban.alts.showip` | See IPs in /alts | OP |
+| `nexusban.notify` | Receive staff alerts | OP |
+| `nexusban.exempt` | Cannot be punished | false |
+| `nexusban.admin` | Admin-level staff | false |
+| `nexusban.moderator` | Moderator-level | false |
+
+</details>
+
+---
+
+## ⚙️ Configuration
 
 ```yaml
 # NexusBan Configuration
@@ -109,26 +147,56 @@ The compiled JAR will be in `target/NexusBan-1.0.jar`
 messages:
   prefix: "&8« &b&lNexus&3&lBan &8» &7"
 
-# Ban screen appeal URL
+# Ban screen appeal URL (shown to banned players)
 appeal-url: "discord.gg/yourserver"
 
-# Auto-punish settings (based on warning count)
+# Auto-punish (escalate warnings automatically)
 auto-punish:
   enabled: true
-  warnings-for-tempmute: 3
-  warnings-for-tempban: 5
-  warnings-for-ban: 10
+  warnings-for-tempmute: 3   # 3 warnings = temp mute
+  warnings-for-tempban: 5    # 5 warnings = temp ban
+  warnings-for-ban: 10       # 10 warnings = permanent ban
 
-# Duration for auto-punishments
+# Auto-punishment durations
 auto-durations:
   tempmute: "1h"
   tempban: "1d"
 ```
 
-## License
+---
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🔧 Building from Source
 
-## Contributing
+```bash
+# Clone the repository
+git clone https://github.com/74br9rwhzh-rgb/NexusBans.git
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+# Navigate to directory
+cd NexusBans
+
+# Build with Maven
+mvn clean package
+```
+
+The compiled JAR will be in `target/NexusBan-1.0.jar`
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+- 🐛 Report bugs
+- 💡 Suggest features
+- 🔧 Submit pull requests
+
+---
+
+<p align="center">
+  Made with ❤️ for the Minecraft community
+</p>

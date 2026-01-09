@@ -1,6 +1,6 @@
 name: NexusBan
 version: 1.0
-main: de.meinplugin.MeinPlugin
+main: de.nexusban.NexusBan
 api-version: 1.21
 author: NexusBan Team
 description: Advanced punishment system with ban, mute, kick, warn and GUI
