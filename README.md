@@ -171,7 +171,7 @@ auto-durations:
 
 ```bash
 # Clone the repository
-git clone https://github.com/74br9rwhzh-rgb/NexusBans.git
+git clone https://github.com/leifiyoo/NexusBans.git
 
 # Navigate to directory
 cd NexusBans
