@@ -8,6 +8,12 @@
 <h1 align="center">🛡️ NexusBan</h1>
 
 <p align="center">
+  <a href="https://modrinth.com/plugin/nexusbans">
+    <img src="assets/image.png" alt="NexusBans" width="200">
+  </a>
+</p>
+
+<p align="center">
   <b>A powerful, modern punishment system for Minecraft Spigot servers</b><br>
   <i>Keep your server safe with advanced moderation tools</i>
 </p>
