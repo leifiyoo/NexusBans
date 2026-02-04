@@ -26,9 +26,9 @@ public class PlayerChatListener implements Listener {
             event.setCancelled(true);
 
             // Send message only to admins with freeze permission
-            String message = plugin.getConfig().getString("messages.freeze.chat-format", "§c[FROZEN] §e{player}§7: §f{message}")
+            String message = MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.chat-format", "§c[FROZEN] §e{player}§7: §f{message}")
                     .replace("{player}", player.getName())
-                    .replace("{message}", event.getMessage());
+                    .replace("{message}", event.getMessage()));
 
             for (Player recipient : event.getRecipients()) {
                 if (recipient.hasPermission("nexusban.freeze")) {
@@ -37,8 +37,8 @@ public class PlayerChatListener implements Listener {
             }
 
             // Send confirmation to frozen player
-            player.sendMessage(plugin.getConfig().getString("messages.freeze.chat-sent", "§7[To Staff] §f{message}")
-                    .replace("{message}", event.getMessage()));
+            player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.chat-sent", "§7[To Staff] §f{message}")
+                    .replace("{message}", event.getMessage())));
 
             return;
         }

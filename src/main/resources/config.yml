@@ -3,12 +3,12 @@
 
 # Message settings
 messages:
-  prefix: "&8« &b&lNexus&3&lBan &8» &7"
+  prefix: "&8[&c&lNEXUS&4&lBAN&8] &7"
   no-permission: "&cYou don't have permission to use this command!"
   player-not-found: "&cPlayer not found!"
 
   # Staff Chat messages
-  staffchat-format: "&7[&cStaff&7] &e{sender}&7: &f{message}"
+  staffchat-format: "&8[&c&lSTAFF&8] &e{sender} &8» &f{message}"
 
   # Freeze system messages
   freeze:
@@ -19,8 +19,8 @@ messages:
     staff-frozen: "&a{player} has been frozen by {admin}!"
     staff-unfrozen: "&a{player} has been unfrozen by {admin}!"
     action-blocked: "&cYou cannot do this while frozen!"
-    chat-format: "&c[FROZEN] &e{player}&7: &f{message}"
-    chat-sent: "&7[To Staff] &f{message}"
+    chat-format: "&8[&c&lFROZEN&8] &e{player} &8» &f{message}"
+    chat-sent: "&8[&7To Staff&8] &f{message}"
     player-disconnected: "&c&l⚠ {player} disconnected while frozen!"
   
 # Discord settings (shown on ban/kick screens)

@@ -73,18 +73,21 @@ public class PlayerJoinListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        
+
+        // Show pending offline warnings first
+        showPendingWarnings(player);
+
         // Check if rejoin warning is enabled
         if (!plugin.getConfig().getBoolean("rejoin-warning.enabled", true)) {
             return;
         }
-        
+
         // Check if player has punishment history
         int totalPunishments = plugin.getHistoryManager().getTotalPunishments(player.getUniqueId());
         if (totalPunishments == 0) {
             return;
         }
-        
+
         // Check time limit for showing warning
         int showForHours = plugin.getConfig().getInt("rejoin-warning.show-for-hours", 168);
         if (showForHours > 0) {
@@ -94,7 +97,7 @@ public class PlayerJoinListener implements Listener {
                 return;
             }
         }
-        
+
         // Send warning message with delay so player can see it
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (player.isOnline()) {
@@ -104,6 +107,47 @@ public class PlayerJoinListener implements Listener {
                 }
             }
         }, 40L); // 2 seconds delay
+    }
+
+    private void showPendingWarnings(Player player) {
+        // Get all warnings from history
+        List<Punishment> allHistory = plugin.getHistoryManager().getAllHistory(player.getUniqueId(), player.getName());
+
+        // Find warnings from the last 7 days that player hasn't seen yet
+        long sevenDaysAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000);
+        long lastSeen = player.getLastPlayed(); // When player was last online
+
+        List<Punishment> pendingWarnings = allHistory.stream()
+            .filter(p -> p.getType() == Punishment.PunishmentType.WARN)
+            .filter(p -> p.getStartTime() > lastSeen) // Warnings received while offline
+            .filter(p -> p.getStartTime() > sevenDaysAgo) // Within last 7 days
+            .toList();
+
+        if (pendingWarnings.isEmpty()) {
+            return;
+        }
+
+        // Show warnings with a delay
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (!player.isOnline()) return;
+
+            int warnCount = plugin.getHistoryManager().getWarningCount(player.getUniqueId());
+
+            for (Punishment warning : pendingWarnings) {
+                player.sendMessage("");
+                player.sendMessage("§8§l§m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                player.sendMessage("§e§l  ⚠ NEW WARNING RECEIVED WHILE OFFLINE");
+                player.sendMessage("§8§l§m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                player.sendMessage("§7  Reason: §f" + warning.getReason());
+                player.sendMessage("§7  Warned by: §f" + warning.getPunisherName());
+                player.sendMessage("§7  Date: §f" + MessageUtils.formatDate(warning.getStartTime()));
+                player.sendMessage("");
+                player.sendMessage("§c  Please follow the server rules!");
+                player.sendMessage("§7  Total warnings: §e" + warnCount);
+                player.sendMessage("§8§l§m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                player.sendMessage("");
+            }
+        }, 60L); // 3 seconds delay
     }
     
     private void checkForBannedAlts(Player player, String ip) {

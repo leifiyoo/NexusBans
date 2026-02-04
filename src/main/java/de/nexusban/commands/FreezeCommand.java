@@ -1,6 +1,7 @@
 package de.nexusban.commands;
 
 import de.nexusban.NexusBan;
+import de.nexusban.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,29 +21,29 @@ public class FreezeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("nexusban.freeze")) {
-            sender.sendMessage(plugin.getConfig().getString("messages.no-permission", "§cYou don't have permission to use this command!"));
+            sender.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.no-permission", "§cYou don't have permission to use this command!")));
             return true;
         }
 
         if (args.length == 0) {
-            sender.sendMessage("§cUsage: /freeze <player>");
+            sender.sendMessage(MessageUtils.colorize("§cUsage: /freeze <player>"));
             return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            sender.sendMessage(plugin.getConfig().getString("messages.player-not-found", "§cPlayer not found!"));
+            sender.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.player-not-found", "§cPlayer not found!")));
             return true;
         }
 
         if (target.hasPermission("nexusban.freeze.bypass")) {
-            sender.sendMessage("§cYou cannot freeze this player!");
+            sender.sendMessage(MessageUtils.colorize("§cYou cannot freeze this player!"));
             return true;
         }
 
         if (plugin.getFreezeManager().isFrozen(target)) {
-            sender.sendMessage(plugin.getConfig().getString("messages.freeze.already-frozen", "§c{player} is already frozen!")
-                    .replace("{player}", target.getName()));
+            sender.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.already-frozen", "§c{player} is already frozen!")
+                    .replace("{player}", target.getName())));
             return true;
         }
 
@@ -51,13 +52,13 @@ public class FreezeCommand implements CommandExecutor {
         plugin.getFreezeManager().freezePlayer(target, adminUUID);
 
         // Send messages
-        String freezeMessage = plugin.getConfig().getString("messages.freeze.frozen", "§cYou have been frozen! You can only chat with staff members.")
-                .replace("{admin}", sender.getName());
+        String freezeMessage = MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.frozen", "§cYou have been frozen! You can only chat with staff members.")
+                .replace("{admin}", sender.getName()));
         target.sendMessage(freezeMessage);
 
-        String staffMessage = plugin.getConfig().getString("messages.freeze.staff-frozen", "§a{player} has been frozen!")
+        String staffMessage = MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.staff-frozen", "§a{player} has been frozen!")
                 .replace("{player}", target.getName())
-                .replace("{admin}", sender.getName());
+                .replace("{admin}", sender.getName()));
         sender.sendMessage(staffMessage);
 
         // Notify other staff members

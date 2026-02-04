@@ -32,13 +32,9 @@ public class HistoryCommand implements CommandExecutor {
         
         String targetName = args[0];
         UUID targetUUID = plugin.getPunishmentManager().getUUID(targetName);
-        
-        if (targetUUID == null) {
-            sender.sendMessage(MessageUtils.PREFIX + "§cPlayer §f" + targetName + " §cwas not found!");
-            return true;
-        }
-        
-        List<Punishment> history = plugin.getHistoryManager().getHistory(targetUUID);
+
+        // Get history for both UUID and name (supports offline/never-joined players)
+        List<Punishment> history = plugin.getHistoryManager().getAllHistory(targetUUID, targetName);
         
         sender.sendMessage("");
         sender.sendMessage("§8§l§m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");

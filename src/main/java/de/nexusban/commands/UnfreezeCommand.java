@@ -1,6 +1,7 @@
 package de.nexusban.commands;
 
 import de.nexusban.NexusBan;
+import de.nexusban.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,24 +19,24 @@ public class UnfreezeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("nexusban.freeze")) {
-            sender.sendMessage(plugin.getConfig().getString("messages.no-permission", "§cYou don't have permission to use this command!"));
+            sender.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.no-permission", "§cYou don't have permission to use this command!")));
             return true;
         }
 
         if (args.length == 0) {
-            sender.sendMessage("§cUsage: /unfreeze <player>");
+            sender.sendMessage(MessageUtils.colorize("§cUsage: /unfreeze <player>"));
             return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            sender.sendMessage(plugin.getConfig().getString("messages.player-not-found", "§cPlayer not found!"));
+            sender.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.player-not-found", "§cPlayer not found!")));
             return true;
         }
 
         if (!plugin.getFreezeManager().isFrozen(target)) {
-            sender.sendMessage(plugin.getConfig().getString("messages.freeze.not-frozen", "§c{player} is not frozen!")
-                    .replace("{player}", target.getName()));
+            sender.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.not-frozen", "§c{player} is not frozen!")
+                    .replace("{player}", target.getName())));
             return true;
         }
 
@@ -43,13 +44,13 @@ public class UnfreezeCommand implements CommandExecutor {
         plugin.getFreezeManager().unfreezePlayer(target);
 
         // Send messages
-        String unfreezeMessage = plugin.getConfig().getString("messages.freeze.unfrozen", "§aYou have been unfrozen!")
-                .replace("{admin}", sender.getName());
+        String unfreezeMessage = MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.unfrozen", "§aYou have been unfrozen!")
+                .replace("{admin}", sender.getName()));
         target.sendMessage(unfreezeMessage);
 
-        String staffMessage = plugin.getConfig().getString("messages.freeze.staff-unfrozen", "§a{player} has been unfrozen!")
+        String staffMessage = MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.staff-unfrozen", "§a{player} has been unfrozen!")
                 .replace("{player}", target.getName())
-                .replace("{admin}", sender.getName());
+                .replace("{admin}", sender.getName()));
         sender.sendMessage(staffMessage);
 
         // Notify other staff members

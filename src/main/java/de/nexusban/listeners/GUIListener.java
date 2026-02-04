@@ -45,15 +45,18 @@ public class GUIListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
-        
+
         Player player = (Player) event.getWhoClicked();
         String title = event.getView().getTitle();
-        
+
         // Check if it's our GUI
         if (!title.startsWith("§8«")) return;
-        
+
+        // Cancel event and clear cursor to prevent item duplication/spam-click issues
         event.setCancelled(true);
-        
+        event.setCursor(null);
+        player.updateInventory();
+
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null || clicked.getType() == Material.AIR) return;
         if (clicked.getType().name().contains("STAINED_GLASS_PANE")) return;
