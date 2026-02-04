@@ -27,9 +27,10 @@ public class FreezeListener implements Listener {
         Player player = event.getPlayer();
         if (plugin.getFreezeManager().isFrozen(player)) {
             // Cancel movement (allow head movement only)
-            if (event.getFrom().getX() != event.getTo().getX() ||
-                    event.getFrom().getY() != event.getTo().getY() ||
-                    event.getFrom().getZ() != event.getTo().getZ()) {
+            if (event.getTo() != null &&
+                (event.getFrom().getX() != event.getTo().getX() ||
+                 event.getFrom().getY() != event.getTo().getY() ||
+                 event.getFrom().getZ() != event.getTo().getZ())) {
                 event.setCancelled(true);
             }
         }
@@ -82,7 +83,8 @@ public class FreezeListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getWhoClicked() instanceof Player player) {
+        if (event.getWhoClicked() instanceof Player) {
+            Player player = (Player) event.getWhoClicked();
             if (plugin.getFreezeManager().isFrozen(player)) {
                 event.setCancelled(true);
                 player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
@@ -92,7 +94,8 @@ public class FreezeListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryOpen(InventoryOpenEvent event) {
-        if (event.getPlayer() instanceof Player player) {
+        if (event.getPlayer() instanceof Player) {
+            Player player = (Player) event.getPlayer();
             if (plugin.getFreezeManager().isFrozen(player)) {
                 event.setCancelled(true);
                 player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
@@ -102,7 +105,8 @@ public class FreezeListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPickupItem(EntityPickupItemEvent event) {
-        if (event.getEntity() instanceof Player player) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
             if (plugin.getFreezeManager().isFrozen(player)) {
                 event.setCancelled(true);
             }
@@ -115,8 +119,15 @@ public class FreezeListener implements Listener {
         if (plugin.getFreezeManager().isFrozen(player)) {
             // Allow only specific commands (like /msg to chat with admin)
             String command = event.getMessage().toLowerCase();
-            if (!command.startsWith("/msg") && !command.startsWith("/tell") &&
-                !command.startsWith("/w") && !command.startsWith("/r")) {
+
+            // Only allow /msg, /tell, /w (whisper), /r (reply) with proper spacing
+            boolean isAllowed = command.startsWith("/msg ") ||
+                               command.startsWith("/tell ") ||
+                               command.startsWith("/w ") ||
+                               command.equals("/r") ||
+                               command.startsWith("/r ");
+
+            if (!isAllowed) {
                 event.setCancelled(true);
                 player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
             }
@@ -125,7 +136,8 @@ public class FreezeListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player player) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
             if (plugin.getFreezeManager().isFrozen(player)) {
                 // Cancel damage taken
                 event.setCancelled(true);
@@ -135,7 +147,8 @@ public class FreezeListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player player) {
+        if (event.getDamager() instanceof Player) {
+            Player player = (Player) event.getDamager();
             if (plugin.getFreezeManager().isFrozen(player)) {
                 event.setCancelled(true);
                 player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
