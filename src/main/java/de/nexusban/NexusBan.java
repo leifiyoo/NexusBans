@@ -10,7 +10,8 @@ public class NexusBan extends JavaPlugin {
     private static NexusBan instance;
     private PunishmentManager punishmentManager;
     private HistoryManager historyManager;
-    
+    private FreezeManager freezeManager;
+
     public static final String PLUGIN_NAME = "NexusBan";
 
     @Override
@@ -23,6 +24,7 @@ public class NexusBan extends JavaPlugin {
         // Initialize managers
         punishmentManager = new PunishmentManager(this);
         historyManager = new HistoryManager(this);
+        freezeManager = new FreezeManager();
         
         // Register commands
         registerCommands();
@@ -44,6 +46,9 @@ public class NexusBan extends JavaPlugin {
         }
         if (historyManager != null) {
             historyManager.saveAll();
+        }
+        if (freezeManager != null) {
+            freezeManager.clearAll();
         }
         getLogger().info(PLUGIN_NAME + " has been disabled!");
     }
@@ -106,12 +111,23 @@ public class NexusBan extends JavaPlugin {
         // Admin commands
         getCommand("nbreload").setExecutor(new ReloadCommand(this));
         getCommand("nbhelp").setExecutor(new HelpCommand());
+
+        // Staff chat command
+        getCommand("staffchat").setExecutor(new StaffChatCommand(this));
+
+        // Freeze commands
+        getCommand("freeze").setExecutor(new FreezeCommand(this));
+        getCommand("freeze").setTabCompleter(tabCompleter);
+
+        getCommand("unfreeze").setExecutor(new UnfreezeCommand(this));
+        getCommand("unfreeze").setTabCompleter(tabCompleter);
     }
 
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerChatListener(this), this);
         getServer().getPluginManager().registerEvents(new GUIListener(this), this);
+        getServer().getPluginManager().registerEvents(new FreezeListener(this), this);
     }
 
     public static NexusBan getInstance() {
@@ -124,6 +140,10 @@ public class NexusBan extends JavaPlugin {
 
     public HistoryManager getHistoryManager() {
         return historyManager;
+    }
+
+    public FreezeManager getFreezeManager() {
+        return freezeManager;
     }
 }
 
