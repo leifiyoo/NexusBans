@@ -119,8 +119,30 @@ public class PunishTabCompleter implements TabCompleter {
                     if (completions.isEmpty()) completions.add("<player>");
                 }
                 break;
+
+            case "freeze":
+                if (args.length == 1) {
+                    completions.addAll(getOnlinePlayerNames(args[0]));
+                    if (completions.isEmpty()) completions.add("<player>");
+                }
+                break;
+
+            case "unfreeze":
+                if (args.length == 1) {
+                    // Show frozen players
+                    List<String> frozenNames = new ArrayList<>();
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (plugin.getFreezeManager().isFrozen(player) &&
+                            player.getName().toLowerCase().startsWith(args[0].toLowerCase())) {
+                            frozenNames.add(player.getName());
+                        }
+                    }
+                    completions.addAll(frozenNames);
+                    if (completions.isEmpty()) completions.add("<player>");
+                }
+                break;
         }
-        
+
         return completions;
     }
     

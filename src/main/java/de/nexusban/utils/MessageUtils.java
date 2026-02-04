@@ -19,7 +19,7 @@ public class MessageUtils {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     
     // Prefix for all messages
-    public static final String PREFIX = "§8« §b§lNexus§3§lBan §8» §7";
+    public static final String PREFIX = "§8[§c§lNEXUS§4§lBAN§8] §7";
     public static final String LINE = "§8§m                                                  ";
     
     // Discord colors: Blurple (#5865F2) approximated in Minecraft

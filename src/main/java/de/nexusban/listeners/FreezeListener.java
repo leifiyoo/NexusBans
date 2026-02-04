@@ -1,6 +1,7 @@
 package de.nexusban.listeners;
 
 import de.nexusban.NexusBan;
+import de.nexusban.utils.MessageUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,7 +42,7 @@ public class FreezeListener implements Listener {
         Player player = event.getPlayer();
         if (plugin.getFreezeManager().isFrozen(player)) {
             event.setCancelled(true);
-            player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
+            player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!")));
         }
     }
 
@@ -50,7 +51,7 @@ public class FreezeListener implements Listener {
         Player player = event.getPlayer();
         if (plugin.getFreezeManager().isFrozen(player)) {
             event.setCancelled(true);
-            player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
+            player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!")));
         }
     }
 
@@ -59,7 +60,7 @@ public class FreezeListener implements Listener {
         Player player = event.getPlayer();
         if (plugin.getFreezeManager().isFrozen(player)) {
             event.setCancelled(true);
-            player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
+            player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!")));
         }
     }
 
@@ -68,7 +69,7 @@ public class FreezeListener implements Listener {
         Player player = event.getPlayer();
         if (plugin.getFreezeManager().isFrozen(player)) {
             event.setCancelled(true);
-            player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
+            player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!")));
         }
     }
 
@@ -77,7 +78,7 @@ public class FreezeListener implements Listener {
         Player player = event.getPlayer();
         if (plugin.getFreezeManager().isFrozen(player)) {
             event.setCancelled(true);
-            player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
+            player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!")));
         }
     }
 
@@ -87,7 +88,7 @@ public class FreezeListener implements Listener {
             Player player = (Player) event.getWhoClicked();
             if (plugin.getFreezeManager().isFrozen(player)) {
                 event.setCancelled(true);
-                player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
+                player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!")));
             }
         }
     }
@@ -98,7 +99,7 @@ public class FreezeListener implements Listener {
             Player player = (Player) event.getPlayer();
             if (plugin.getFreezeManager().isFrozen(player)) {
                 event.setCancelled(true);
-                player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
+                player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!")));
             }
         }
     }
@@ -129,7 +130,7 @@ public class FreezeListener implements Listener {
 
             if (!isAllowed) {
                 event.setCancelled(true);
-                player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
+                player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!")));
             }
         }
     }
@@ -151,7 +152,7 @@ public class FreezeListener implements Listener {
             Player player = (Player) event.getDamager();
             if (plugin.getFreezeManager().isFrozen(player)) {
                 event.setCancelled(true);
-                player.sendMessage(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!"));
+                player.sendMessage(MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.action-blocked", "§cYou cannot do this while frozen!")));
             }
         }
     }
@@ -161,8 +162,8 @@ public class FreezeListener implements Listener {
         Player player = event.getPlayer();
         if (plugin.getFreezeManager().isFrozen(player)) {
             // Notify staff that frozen player disconnected
-            String message = plugin.getConfig().getString("messages.freeze.player-disconnected", "§c{player} disconnected while frozen!")
-                    .replace("{player}", player.getName());
+            String message = MessageUtils.colorize(plugin.getConfig().getString("messages.freeze.player-disconnected", "§c{player} disconnected while frozen!")
+                    .replace("{player}", player.getName()));
 
             for (Player onlinePlayer : plugin.getServer().getOnlinePlayers()) {
                 if (onlinePlayer.hasPermission("nexusban.freeze")) {
