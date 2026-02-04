@@ -20,7 +20,32 @@ public class PlayerChatListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        
+
+        // Check if player is frozen
+        if (plugin.getFreezeManager().isFrozen(player)) {
+            event.setCancelled(true);
+
+            // Send message only to admins with freeze permission
+            String message = plugin.getConfig().getString("messages.freeze.chat-format", "§c[FROZEN] §e{player}§7: §f{message}")
+                    .replace("{player}", player.getName())
+                    .replace("{message}", event.getMessage());
+
+            for (Player recipient : event.getRecipients()) {
+                if (recipient.hasPermission("nexusban.freeze")) {
+                    recipient.sendMessage(message);
+                }
+            }
+
+            // Send confirmation to frozen player
+            player.sendMessage(plugin.getConfig().getString("messages.freeze.chat-sent", "§7[To Staff] §f{message}")
+                    .replace("{message}", event.getMessage()));
+
+            return;
+        }
+
+        // Remove frozen players from recipients
+        event.getRecipients().removeIf(recipient -> plugin.getFreezeManager().isFrozen(recipient));
+
         // Check if player is muted by UUID
         Punishment mute = null;
         if (plugin.getPunishmentManager().isMuted(player.getUniqueId())) {
