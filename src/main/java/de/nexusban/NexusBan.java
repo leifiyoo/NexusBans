@@ -3,6 +3,7 @@ package de.nexusban;
 import de.nexusban.commands.*;
 import de.nexusban.listeners.*;
 import de.nexusban.managers.*;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NexusBan extends JavaPlugin {
@@ -20,6 +21,10 @@ public class NexusBan extends JavaPlugin {
         
         // Save default config
         saveDefaultConfig();
+
+        // Initialize bStats metrics
+        int pluginId = 29396;
+        new Metrics(this, pluginId);
         
         // Initialize managers
         punishmentManager = new PunishmentManager(this);

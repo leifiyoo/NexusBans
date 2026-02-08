@@ -79,6 +79,7 @@ commands:
   nbhelp:
     description: Show all NexusBan commands
     usage: /nbhelp
+    permission: nexusban.help
   staffchat:
     description: Send a message to all staff members
     usage: /staffchat <message>
@@ -122,6 +123,7 @@ permissions:
       nexusban.bypass.protection: true
       nexusban.reload: true
       nexusban.staffchat: true
+      nexusban.help: true
       nexusban.freeze: true
       nexusban.freeze.bypass: true
   nexusban.ban:
@@ -195,6 +197,9 @@ permissions:
     default: op
   nexusban.staffchat:
     description: Permission to use staff chat
+    default: op
+  nexusban.help:
+    description: Permission to view the /nbhelp command
     default: op
   nexusban.freeze:
     description: Permission to freeze and unfreeze players
