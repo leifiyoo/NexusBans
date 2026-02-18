@@ -184,13 +184,13 @@ cd NexusBans
 mvn clean package
 ```
 
-The compiled JAR will be in `target/NexusBan-1.1.0.jar`
+The compiled JAR will be in `target/NexusBan-1.1.1.jar`
 
 ---
 
 ## 📋 Version History
 
-**v1.1.0** - Staff Chat & Freeze System
+**v1.1.1** - Staff Chat & Freeze System
 - Added staff chat system (`/staffchat`, `/sc`)
 - Added complete freeze system (`/freeze`, `/unfreeze`)
 - Frozen players fully restricted (movement, actions, chat)
