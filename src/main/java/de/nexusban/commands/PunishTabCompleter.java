@@ -28,7 +28,7 @@ public class PunishTabCompleter implements TabCompleter {
         switch (cmd) {
             case "ban":
                 if (args.length == 1) {
-                    completions.addAll(getPlayerNames(args[0]));
+                    completions.addAll(getOnlinePlayerNames(args[0]));
                     if (completions.isEmpty()) completions.add("<player>");
                 } else if (args.length == 2) {
                     completions.add("<reason>");
@@ -37,7 +37,7 @@ public class PunishTabCompleter implements TabCompleter {
                 
             case "tempban":
                 if (args.length == 1) {
-                    completions.addAll(getPlayerNames(args[0]));
+                    completions.addAll(getOnlinePlayerNames(args[0]));
                     if (completions.isEmpty()) completions.add("<player>");
                 } else if (args.length == 2) {
                     completions.add("<time>");
@@ -68,7 +68,7 @@ public class PunishTabCompleter implements TabCompleter {
                 
             case "mute":
                 if (args.length == 1) {
-                    completions.addAll(getPlayerNames(args[0]));
+                    completions.addAll(getOnlinePlayerNames(args[0]));
                     if (completions.isEmpty()) completions.add("<player>");
                 } else if (args.length == 2) {
                     completions.add("<reason>");
@@ -77,7 +77,7 @@ public class PunishTabCompleter implements TabCompleter {
                 
             case "tempmute":
                 if (args.length == 1) {
-                    completions.addAll(getPlayerNames(args[0]));
+                    completions.addAll(getOnlinePlayerNames(args[0]));
                     if (completions.isEmpty()) completions.add("<player>");
                 } else if (args.length == 2) {
                     completions.add("<time>");
@@ -108,14 +108,14 @@ public class PunishTabCompleter implements TabCompleter {
                 
             case "history":
                 if (args.length == 1) {
-                    completions.addAll(getPlayerNames(args[0]));
+                    completions.addAll(getOnlinePlayerNames(args[0]));
                     if (completions.isEmpty()) completions.add("<player>");
                 }
                 break;
                 
             case "punish":
                 if (args.length == 1) {
-                    completions.addAll(getPlayerNames(args[0]));
+                    completions.addAll(getOnlinePlayerNames(args[0]));
                     if (completions.isEmpty()) completions.add("<player>");
                 }
                 break;
@@ -144,28 +144,6 @@ public class PunishTabCompleter implements TabCompleter {
         }
 
         return completions;
-    }
-    
-    private List<String> getPlayerNames(String prefix) {
-        List<String> names = new ArrayList<>();
-        
-        // Add online players
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getName().toLowerCase().startsWith(prefix.toLowerCase())) {
-                names.add(player.getName());
-            }
-        }
-        
-        // Add offline players who have played before
-        for (org.bukkit.OfflinePlayer offline : Bukkit.getOfflinePlayers()) {
-            if (offline.getName() != null && 
-                offline.getName().toLowerCase().startsWith(prefix.toLowerCase()) &&
-                !names.contains(offline.getName())) {
-                names.add(offline.getName());
-            }
-        }
-        
-        return names;
     }
     
     private List<String> getOnlinePlayerNames(String prefix) {
