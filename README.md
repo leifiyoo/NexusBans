@@ -1,9 +1,4 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/Minecraft-1.21.4-green?style=for-the-badge&logo=minecraft" alt="Minecraft">
-  <img src="https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk" alt="Java">
-  <img src="https://img.shields.io/badge/Spigot-API-yellow?style=for-the-badge" alt="Spigot">
-  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License">
-</p>
+
 
 <h1 align="center">🛡️ NexusBan</h1>
 
